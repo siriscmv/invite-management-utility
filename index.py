@@ -32,10 +32,14 @@ async def verify(event: hikari.InteractionCreateEvent) -> None:
     if (datetime.now() - event.interaction.user.created_at.replace(tzinfo=None)) < timedelta(days=14):
         await event.interaction.create_initial_response(response_type=4, content="Your account is to young to get verified, please DM a staff member to verify your account.", flags=MessageFlag.EPHEMERAL) 
         return
-    #elif event.interaction.member.get_presence().visible_status.value == 'offline':
-    #    await event.interaction.create_initial_response(response_type=4, content="You cannot verify while being invisible!, please go online for a moment to verify", flags=MessageFlag.EPHEMERAL)
     else:
-        await event.interaction.member.add_role(config.get('verified_role'))
-        await event.interaction.create_initial_response(response_type=4, content="You have been verified!", flags=MessageFlag.EPHEMERAL)
+        #member = event.interaction.member
+        #if member.get_presence() == None: member = await event.interaction.member.fetch_self()
+        #if member.get_presence().name == 'offline':
+        #    await event.interaction.create_initial_response(response_type=4, content="You cannot verify while being invisible!, please go online for a moment to verify", flags=MessageFlag.EPHEMERAL)
+        #    return
+        #else:
+            await event.interaction.member.add_role(config.get('verified_role'))
+            await event.interaction.create_initial_response(response_type=4, content="You have been verified!", flags=MessageFlag.EPHEMERAL)
 
 bot.run( asyncio_debug=True, coroutine_tracking_depth=20, propagate_interrupts=True)
