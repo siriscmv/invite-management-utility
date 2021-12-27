@@ -1,28 +1,29 @@
 {
-  "name": "invite-management-utility",
-  "version": "1.0.0",
-  "description": "Open source utility bot",
-  "main": "index.js",
-  "scripts": {
-    "build": "tsc",
-    "start": "node -r dotenv/config ./prod/index.js"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/Siris01/invite-management-utility.git"
-  },
-  "author": "Siris#1337",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/Siris01/invite-management-utility/issues"
-  },
-  "homepage": "https://github.com/Siris01/invite-management-utility#readme",
-  "devDependencies": {
-    "@types/node": "^17.0.5",
-    "typescript": "^4.5.4"
-  },
-  "dependencies": {
-    "detritus-client": "^0.16.3",
-    "dotenv": "^10.0.0"
-  }
+	"name": "invite-management-utility",
+	"version": "1.0.0",
+	"description": "Open source utility bot",
+	"main": "index.js",
+	"scripts": {
+		"build": "tsc",
+		"start": "node -r dotenv/config ./prod/index.js"
+	},
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/Siris01/invite-management-utility.git"
+	},
+	"author": "Siris#1337",
+	"license": "ISC",
+	"bugs": {
+		"url": "https://github.com/Siris01/invite-management-utility/issues"
+	},
+	"homepage": "https://github.com/Siris01/invite-management-utility#readme",
+	"devDependencies": {
+		"@types/node": "^17.0.5",
+		"prettier": "2.5.1",
+		"typescript": "^4.5.4"
+	},
+	"dependencies": {
+		"detritus-client": "^0.16.3",
+		"dotenv": "^10.0.0"
+	}
 }
