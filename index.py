@@ -21,7 +21,7 @@ async def ping(msg: hikari.GuildMessageCreateEvent) -> None:
         return
 
     if msg.content.startswith(f"{config.get('prefix')}ping"):
-        await msg.message.respond("Pong!")
+        await msg.message.respond(f"Pong! `{bot.heartbeat_latency}` ms")
 
 @bot.listen()
 async def verify(event: hikari.InteractionCreateEvent) -> None:
