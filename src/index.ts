@@ -1,6 +1,5 @@
 import { CommandClient } from 'detritus-client';
-import { InteractionTypes } from 'detritus-client/lib/constants';
-import { InteractionDataApplicationCommand, InteractionDataComponent } from 'detritus-client/lib/structures';
+import { InteractionDataApplicationCommand } from 'detritus-client/lib/structures';
 import config from './config.json';
 
 const commandClient = new CommandClient(process.env.DISCORD_TOKEN!, {
