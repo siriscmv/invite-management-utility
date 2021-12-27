@@ -1,4 +1,4 @@
-from datetime import datetime, timedelta
+from datetime import datetime, timedelta, tzinfo
 import hikari
 import os
 
@@ -26,16 +26,16 @@ async def ping(msg: hikari.GuildMessageCreateEvent) -> None:
 @bot.listen()
 async def verify(event: hikari.InteractionCreateEvent) -> None:
     if not event.interaction.guild_id == config.get('main_server'): return
-    if not event.interaction.type.value == 3: return
-    if not event.interaction.custom_id == '__VERIFY': return
+    if not event.interaction.type == hikari.InteractionType.MESSAGE_COMPONENT: return
+    if not event.interaction.custom_id == '_VERIFY': return
 
-    if event.interaction.user.created_at - datetime.now() < timedelta(days=7):
-        await event.interaction.create_initial_response(content="Your account is to younf to get verified, please DM a staff member to verify your account.", flags=MessageFlag.EPHEMERAL)
+    if (datetime.now() - event.interaction.user.created_at.replace(tzinfo=None)) < timedelta(days=14):
+        await event.interaction.create_initial_response(response_type=4, content="Your account is to young to get verified, please DM a staff member to verify your account.", flags=MessageFlag.EPHEMERAL) 
         return
-    elif event.interaction.member.get_presence().visible_status.value == 'offline':
-        await event.interaction.create_initial_response(content="You cannot verify while being invisible!, please go online for a moment to verify", flags=MessageFlag.EPHEMERAL)
+    #elif event.interaction.member.get_presence().visible_status.value == 'offline':
+    #    await event.interaction.create_initial_response(response_type=4, content="You cannot verify while being invisible!, please go online for a moment to verify", flags=MessageFlag.EPHEMERAL)
     else:
         await event.interaction.member.add_role(config.get('verified_role'))
-        await event.interaction.create_initial_response(content="You have been verified!", flags=MessageFlag.EPHEMERAL)
+        await event.interaction.create_initial_response(response_type=4, content="You have been verified!", flags=MessageFlag.EPHEMERAL)
 
 bot.run( asyncio_debug=True, coroutine_tracking_depth=20, propagate_interrupts=True)
