@@ -1,0 +1,22 @@
+{
+  "name": "invite-management-utility",
+  "version": "1.0.0",
+  "description": "Open source utility bot",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Siris01/invite-management-utility.git"
+  },
+  "author": "Siris#1337",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Siris01/invite-management-utility/issues"
+  },
+  "homepage": "https://github.com/Siris01/invite-management-utility#readme",
+  "devDependencies": {
+    "typescript": "^4.5.4"
+  }
+}
