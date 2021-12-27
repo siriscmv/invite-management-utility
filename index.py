@@ -24,17 +24,18 @@ async def ping(msg: hikari.GuildMessageCreateEvent) -> None:
         await msg.message.respond("Pong!")
 
 @bot.listen()
-async def verify(interaction: hikari.ComponentInteraction) -> None:
-    if not interaction.guild_id == config.get('main_server'): return
-    if not interaction.custom_id == '__VERIFY': return
+async def verify(event: hikari.InteractionCreateEvent) -> None:
+    if not event.interaction.guild_id == config.get('main_server'): return
+    if not event.interaction.type.value == 3: return
+    if not event.interaction.custom_id == '__VERIFY': return
 
-    if interaction.user.created_at - datetime.now() < timedelta(days=7):
-        await interaction.create_initial_response(content="Your account is to younf to get verified, please DM a staff member to verify your account.", flags=MessageFlag.EPHEMERAL)
+    if event.interaction.user.created_at - datetime.now() < timedelta(days=7):
+        await event.interaction.create_initial_response(content="Your account is to younf to get verified, please DM a staff member to verify your account.", flags=MessageFlag.EPHEMERAL)
         return
-    elif interaction.member.get_presence().visible_status.value == 'offline':
-        await interaction.create_initial_response(content="You cannot verify while being invisible!, please go online for a moment to verify", flags=MessageFlag.EPHEMERAL)
+    elif event.interaction.member.get_presence().visible_status.value == 'offline':
+        await event.interaction.create_initial_response(content="You cannot verify while being invisible!, please go online for a moment to verify", flags=MessageFlag.EPHEMERAL)
     else:
-        await interaction.member.add_role(config.get('verified_role'))
-        await interaction.create_initial_response(content="You have been verified!", flags=MessageFlag.EPHEMERAL)
+        await event.interaction.member.add_role(config.get('verified_role'))
+        await event.interaction.create_initial_response(content="You have been verified!", flags=MessageFlag.EPHEMERAL)
 
 bot.run( asyncio_debug=True, coroutine_tracking_depth=20, propagate_interrupts=True)
