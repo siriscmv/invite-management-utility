@@ -26,7 +26,7 @@ async def ping(msg: hikari.GuildMessageCreateEvent) -> None:
 @bot.listen()
 async def verify(interaction: hikari.ComponentInteraction) -> None:
     if not interaction.guild_id == config.get('main_server'): return
-    if not interaction.custom_id == '_VERIFY': return
+    if not interaction.custom_id == '__VERIFY': return
 
     if interaction.user.created_at - datetime.now() < timedelta(days=7):
         await interaction.create_initial_response(content="Your account is to younf to get verified, please DM a staff member to verify your account.", flags=MessageFlag.EPHEMERAL)
