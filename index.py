@@ -32,7 +32,7 @@ async def verify(interaction: hikari.ComponentInteraction) -> None:
         await interaction.create_initial_response(content="Your account is to younf to get verified, please DM a staff member to verify your account.", flags=MessageFlag.EPHEMERAL)
         return
     elif interaction.member.get_presence().visible_status.value == 'offline':
-        await interaction.create_initial_response(content="You cannot verify while being invisible!, please go online for a moment to verify and then go back to being invisible.", flags=MessageFlag.EPHEMERAL)
+        await interaction.create_initial_response(content="You cannot verify while being invisible!, please go online for a moment to verify", flags=MessageFlag.EPHEMERAL)
     else:
         await interaction.member.add_role(config.get('verified_role'))
         await interaction.create_initial_response(content="You have been verified!", flags=MessageFlag.EPHEMERAL)
