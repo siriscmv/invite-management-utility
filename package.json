@@ -5,7 +5,7 @@
 	"main": "index.js",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-		"start": "tsc && node -r dotenv/config ./dist/index.js",
+		"start": "tsc && node -r dotenv/config ./prod/index.js",
 		"pm2": "tsc && pm2 start pm2.config.js"
 	},
 	"repository": {
