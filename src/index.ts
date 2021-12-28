@@ -1,10 +1,10 @@
-import { ShardClient } from 'detritus-client';
+import { CommandClient, ShardClient } from 'detritus-client';
 import { GatewayIntents } from 'detritus-client-socket/lib/constants';
 import { InteractionCallbackTypes, MessageFlags } from 'detritus-client/lib/constants';
 import { InteractionDataApplicationCommand } from 'detritus-client/lib/structures';
 import config from './config.json';
 
-const shardClient = new ShardClient(process.env.DISCORD_TOKEN!, {
+const commandClient = new CommandClient(process.env.DISCORD_TOKEN!, {
 	gateway: {
 		loadAllMembers: true,
 		intents: [
@@ -16,7 +16,15 @@ const shardClient = new ShardClient(process.env.DISCORD_TOKEN!, {
 	}
 });
 
-shardClient.on('interactionCreate', async (event) => {
+commandClient.add({
+	name: 'ping',
+	run: async (context) => {
+		const ping = await context.client.ping();
+		return context.reply(`Pong!\nGateway: \`${ping.gateway}\` ms\nRest: \`${ping.rest}\` ms`);
+	}
+});
+
+commandClient.client.on('interactionCreate', async (event) => {
 	const interaction = event.interaction;
 	if (interaction.guildId != config.mainServer) return;
 	if (interaction.data instanceof InteractionDataApplicationCommand) return;
@@ -43,11 +51,13 @@ shardClient.on('interactionCreate', async (event) => {
 });
 
 (async () => {
-	const client = await shardClient.run();
-	console.log(`Client has logged in as ${client.applicationId}`);
-	await client.guilds.cache.get(config.mainServer)?.requestMembers({
-		presences: true,
-		query: ''
-	});
-	console.log(`Chunked members!`);
+	const _commandClient = await commandClient.run();
+	console.log(`Client has logged in as ${_commandClient.applicationId}`);
+	if (_commandClient instanceof ShardClient) {
+		await _commandClient.guilds.cache.get(config.mainServer)?.requestMembers({
+			presences: true,
+			query: ''
+		});
+		console.log(`Chunked members!`);
+	}
 })();
