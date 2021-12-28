@@ -13,7 +13,8 @@ const commandClient = new CommandClient(process.env.DISCORD_TOKEN!, {
 			GatewayIntents.GUILD_MESSAGES,
 			GatewayIntents.GUILD_PRESENCES
 		]
-	}
+	},
+	prefixes: ['$']
 });
 
 commandClient.add({
