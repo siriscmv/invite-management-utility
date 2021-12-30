@@ -25,7 +25,8 @@ export default async () => {
 		if (event.endsWith('.ts')) {
 			const eventName = event.replace('.ts', '');
 			const eventModule = await import(`./events/${event}`);
-			commandClient.on(eventName, eventModule.default);
+			const handler = eventModule.default;
+			commandClient.on(eventName, (...args) => handler(commandClient, ...args));
 		}
 	}
 
