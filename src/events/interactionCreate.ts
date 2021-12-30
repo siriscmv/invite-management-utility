@@ -3,7 +3,7 @@ import { InteractionCallbackTypes, MessageFlags } from 'detritus-client/lib/cons
 import { InteractionDataApplicationCommand } from 'detritus-client/lib/structures';
 import config from './../config.json';
 
-export default async (commandClient: CommandClient, event: GatewayClientEvents.InteractionCreate) => {
+export default async (client: CommandClient, event: GatewayClientEvents.InteractionCreate) => {
 	const interaction = event.interaction;
 	if (interaction.guildId != config.mainServer) return;
 	if (interaction.data instanceof InteractionDataApplicationCommand) return;

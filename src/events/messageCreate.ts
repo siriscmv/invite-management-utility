@@ -3,7 +3,7 @@ import config from './../config.json';
 import log from '../utils/log';
 import sleep from '../utils/sleep';
 
-export default async (commandClient: CommandClient, event: GatewayClientEvents.MessageCreate) => {
+export default async (client: CommandClient, event: GatewayClientEvents.MessageCreate) => {
 	const msg = event.message;
 	const inviteRegex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/gi;
 	const urlRegex =

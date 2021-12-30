@@ -1,10 +1,12 @@
 import { CommandClient, ShardClient } from 'detritus-client';
 import { GatewayIntents } from 'detritus-client-socket/lib/constants';
 import { readdir } from 'fs/promises';
+import * as path from 'path';
 import config from './config.json';
 
 export default async () => {
-	const commandClient = new CommandClient(process.env.DISCORD_TOKEN!, {
+	const commandClient: CommandClient = new CommandClient(process.env.DISCORD_TOKEN!, {
+		useClusterClient: false,
 		gateway: {
 			loadAllMembers: true,
 			intents: [
@@ -17,16 +19,15 @@ export default async () => {
 		prefixes: config.prefixes
 	});
 
-	commandClient.addMultipleIn('./commands/');
+	commandClient.addMultipleIn('commands');
 
-	const events = await readdir('./events/');
+	const events = await readdir(path.join(path.dirname(require?.main?.filename!), 'events'));
 
 	for (const event of events) {
-		if (event.endsWith('.ts')) {
-			const eventName = event.replace('.ts', '');
-			const eventModule = await import(`./events/${event}`);
-			const handler = eventModule.default;
-			commandClient.on(eventName, (...args) => handler(commandClient, ...args));
+		if (event.endsWith('.js')) {
+			const eventName = event.replace('.js', '');
+			const handler = require(`./events/${eventName}`);
+			commandClient.client.on(eventName, handler.default.bind(null, commandClient));
 		}
 	}
 
