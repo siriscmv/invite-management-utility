@@ -17,9 +17,9 @@ export default async () => {
 		prefixes: config.prefixes
 	});
 
-	commandClient.addMultipleIn('./commands');
+	commandClient.addMultipleIn('./commands/');
 
-	const events = await readdir('./events');
+	const events = await readdir('./events/');
 
 	for (const event of events) {
 		if (event.endsWith('.ts')) {
