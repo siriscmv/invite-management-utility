@@ -9,6 +9,8 @@ export default async (client: CommandClient, event: GatewayClientEvents.MessageC
 	const urlRegex =
 		/https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
 
+	if (msg.fromWebhook || msg.author.bot) return;
+
 	if (inviteRegex.test(msg.content)) {
 		if (!msg.member?.canManageMessages) {
 			await msg.delete({ reason: 'Invite Link' });
