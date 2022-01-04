@@ -1,10 +1,10 @@
 import { Argument, ArgumentContext, PieceContext } from '@sapphire/framework';
 interface Emote {
-	name: String;
+	name?: String;
 	id: String;
 	animated: boolean;
 	url: String;
-	emoji: String;
+	emoji?: String;
 }
 
 export class EmojiArgument extends Argument<Emote> {
