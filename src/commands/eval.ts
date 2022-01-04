@@ -3,6 +3,7 @@ import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
 import type { Message } from 'discord.js';
 import { inspect } from 'util';
+import { emotes } from '../utils/emotes';
 
 export class EvalCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {
@@ -27,7 +28,11 @@ export class EvalCommand extends Command {
 		});
 
 		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
-		if (args.getFlags('silent', 's')) return null;
+		if (args.getFlags('silent', 's')) {
+			if (success) message.react(emotes.yes);
+			else message.react(emotes.no);
+			return null;
+		}
 
 		const typeFooter = `**Type**: ${codeBlock('typescript', type)}`;
 
