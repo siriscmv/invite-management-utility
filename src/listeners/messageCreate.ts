@@ -17,15 +17,13 @@ export class MessageCreateListener extends Listener {
 			(msg.channel as TextChannel).bulkDelete(msgs.filter((m) => m.author.id === msg.client.user!.id));
 			if (msg.system) {
 				msg.channel.send(
-					`${msg.author} Thank you for boosting!, make a ticket in <#874646469506895872> to claim your perks.`
+					`${msg.author} Thank you for boosting!, make a ticket in <#${config.ticketChannel}> to claim your perks.`
 				);
 			}
 			const embed = new MessageEmbed()
 				.setColor('#e659f3')
 				.setTitle('Boost Perks')
-				.setDescription(
-					`${emotes.boost} [Click here](https://discord.com/channels/874644312200212500/906882529896853554/906882563824582667)`
-				);
+				.setDescription(`${emotes.boost} [Click here](${config.boostPerks})`);
 
 			msg.channel.send({ embeds: [embed] });
 		}

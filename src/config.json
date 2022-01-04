@@ -11,5 +11,7 @@
 	"blacklistedWords": ["@everyone", "@here"],
 	"boostChannel": "906882529896853554",
 	"mainBot": "873934253468024852",
-	"uptimeLogs": "894839414830817300"
+	"uptimeLogs": "894839414830817300",
+	"ticketChannel": "874646469506895872",
+	"boostPerks": "https://discord.com/channels/874644312200212500/906882529896853554/906882563824582667"
 }
