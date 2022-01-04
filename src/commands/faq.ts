@@ -1,7 +1,7 @@
 import { Command } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 
-export class PingCommand extends Command {
+export class FaqCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {
 		super(context, {
 			...options,
