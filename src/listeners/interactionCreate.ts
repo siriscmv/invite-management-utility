@@ -2,7 +2,7 @@ import { Listener } from '@sapphire/framework';
 import type { Interaction } from 'discord.js';
 import config from '../config.json';
 
-export class MessageCreateListener extends Listener {
+export class InteractionCreateListener extends Listener {
 	public async run(interaction: Interaction) {
 		if (interaction.guildId !== config.mainServer) return;
 		if (interaction.isButton() && interaction.customId === '_VERIFY') {
