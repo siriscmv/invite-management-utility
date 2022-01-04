@@ -10,5 +10,6 @@
 	"prefixes": ["$"],
 	"blacklistedWords": ["@everyone", "@here"],
 	"boostChannel": "906882529896853554",
-	"mainBot": "873934253468024852"
+	"mainBot": "873934253468024852",
+	"uptimeLogs": "894839414830817300"
 }
