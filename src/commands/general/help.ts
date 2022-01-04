@@ -18,7 +18,7 @@ export class HelpCommand extends Command {
 		if (command) {
 			const embed = new MessageEmbed()
 				.setColor(config.color as ColorResolvable)
-				.setTitle(command.name)
+				.setTitle(`${this.capitalise(command.name)} Command`)
 				.setDescription(command.description)
 				.addField('Aliases', command.aliases.join(', '), true)
 				.addField('Category', command.fullCategory[0], true)
@@ -38,18 +38,25 @@ export class HelpCommand extends Command {
 		const commands: CommandStore = container.stores.get('commands');
 		const categories = [...new Set(commands.map((c) => c.fullCategory[0]))];
 
-		const embed = new MessageEmbed().addFields(
-			categories.map((cat) => {
-				return {
-					name: this.capitalise(cat),
-					value: commands
-						.filter((c) => cat === c.fullCategory[0])
-						.map((c) => this.capitalise(c.name))
-						.join('\n'),
-					inline: true
-				};
+		const embed = new MessageEmbed()
+			.setTitle('All commands')
+			.setAuthor({
+				name: msg.client.user!.tag,
+				iconURL: msg.client.user!.displayAvatarURL()
 			})
-		);
+			.setColor(config.color as ColorResolvable)
+			.addFields(
+				categories.map((cat) => {
+					return {
+						name: this.capitalise(cat),
+						value: commands
+							.filter((c) => cat === c.fullCategory[0])
+							.map((c) => this.capitalise(c.name))
+							.join('\n'),
+						inline: true
+					};
+				})
+			);
 
 		return msg.reply({ embeds: [embed] });
 	}
