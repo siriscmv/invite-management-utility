@@ -1,10 +1,10 @@
 import { Listener } from '@sapphire/framework';
 import type { Presence, TextChannel } from 'discord.js';
-import { logs, owners } from '../config.json';
+import { logs, owners, mainServer, mainBot } from '../config.json';
 
 export class PresenceUpdateListener extends Listener {
 	public async run(oldPresence: Presence, newPresence: Presence) {
-		if (newPresence.userId !== '581451736305106985') return;
+		if (newPresence.userId !== mainBot || newPresence.guild?.id !== mainServer) return;
 		if (oldPresence && (!newPresence || ['offline', 'invisible'].includes(newPresence.status)))
 			(oldPresence.client.channels.cache.get(logs)! as TextChannel).send({
 				content: `${owners.map((id) => `<@${id}>`).join(', ')} | ${oldPresence.user?.tag} has gone offline.`
