@@ -46,7 +46,12 @@ export class EmbedSourceCommand extends Command {
 			if (v && typeof v === 'object') {
 				this.clean(v);
 			}
-			if ((v && typeof v === 'object' && !Object.keys(v).length) || v === null || v === undefined) {
+			if (
+				(v && typeof v === 'object' && !Object.keys(v).length) ||
+				v === null ||
+				v === undefined ||
+				['type', 'components', 'proxyURL', 'height', 'width'].includes(k)
+			) {
 				if (Array.isArray(object)) {
 					object.splice(parseInt(k), 1);
 				} else {
