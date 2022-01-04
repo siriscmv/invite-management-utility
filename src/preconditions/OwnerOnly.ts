@@ -2,7 +2,7 @@ import { Precondition } from '@sapphire/framework';
 import type { Message } from 'discord.js';
 import { owners } from '../config.json';
 
-export class UserPrecondition extends Precondition {
+export class OwnerOnlyPrecondition extends Precondition {
 	public async run(message: Message) {
 		return owners.includes(message.author.id)
 			? this.ok()
