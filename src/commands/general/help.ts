@@ -1,5 +1,7 @@
-import { Args, Command } from '@sapphire/framework';
-import type { Message } from 'discord.js';
+import { Args, Command, CommandStore } from '@sapphire/framework';
+import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
+import config from '../../config.json';
+const { container } = require('@sapphire/framework');
 
 export class HelpCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {
@@ -11,12 +13,48 @@ export class HelpCommand extends Command {
 	}
 
 	public async messageRun(msg: Message, args: Args) {
-		const command = args.pick('command');
+		const command = await args.pick('command').catch(() => null);
 
-		const content = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
-			msg.createdTimestamp - msg.createdTimestamp
-		}${command}`;
+		if (command) {
+			const embed = new MessageEmbed()
+				.setColor(config.color as ColorResolvable)
+				.setTitle(command.name)
+				.setDescription(command.description)
+				.addField('Aliases', command.aliases.join(', '), true)
+				.addField('Category', command.fullCategory[0], true)
+				.addField(
+					'Flags, Options',
+					`Flags: ${
+						(command.options.flags as string[] | undefined)?.map((d) => `\`--${d}\``).join(', ') ?? 'None'
+					}\nOptions: ${
+						(command.options.options as string[] | undefined)?.map((d) => `\`--${d}=\``).join(',') ?? 'None'
+					}`,
+					false
+				);
 
-		return msg.edit(content);
+			return msg.reply({ embeds: [embed] });
+		}
+
+		const commands: CommandStore = container.stores.get('commands');
+		const categories = [...new Set(commands.map((c) => c.fullCategory[0]))];
+
+		const embed = new MessageEmbed().addFields(
+			categories.map((cat) => {
+				return {
+					name: this.capitalise(cat),
+					value: commands
+						.filter((c) => cat === c.fullCategory[0])
+						.map((c) => this.capitalise(c.name))
+						.join('\n'),
+					inline: true
+				};
+			})
+		);
+
+		return msg.reply({ embeds: [embed] });
+	}
+
+	private capitalise(str: string) {
+		return str.charAt(0).toUpperCase() + str.slice(1);
 	}
 }

@@ -1,4 +1,4 @@
-import type { Message } from 'discord.js';
+import type { ColorResolvable, Message } from 'discord.js';
 import { MessageEmbed, TextBasedChannel, TextChannel, ThreadChannel } from 'discord.js';
 import config from './../config.json';
 
@@ -10,7 +10,7 @@ const types = {
 
 export default async (type: keyof typeof types, msg: Message) => {
 	const embed: MessageEmbed = new MessageEmbed()
-		.setColor('RED')
+		.setColor(config.color as ColorResolvable)
 		.setTitle(types[type] ?? 'Unknown')
 		.setDescription(msg.content)
 		.setAuthor({
