@@ -12,7 +12,7 @@ export class EmojiArgument extends Argument<Emote> {
 		super(context, { name: 'emoji' });
 	}
 
-	parser = new RegExp(/<(a?)?:(\w+):(\d{18}>)?/, '');
+	parser = new RegExp(/<(a?)?:(\w+):(\d{18})>?/, '');
 	linkParser = new RegExp(/https:\/\/cdn\.discordapp\.com\/emojis\/(\d+)\.(\w+)/, '');
 
 	public run(parameter: string, context: ArgumentContext<Emote>): Argument.Result<Emote> {

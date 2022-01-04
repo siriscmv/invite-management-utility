@@ -12,69 +12,52 @@ export class StealCommand extends Command {
 		});
 	}
 
+	addedSome = false;
+
 	public async messageRun(msg: Message, args: Args) {
-		const stickers = await args.pick('sticker').catch(() => []);
+		const stickers = msg.stickers.map((s) => s);
 		const emojis = await args.repeat('emoji').catch(() => []);
-		const images = await args.pick('image').catch(() => []);
+		const images = msg.attachments.filter((a) => a.contentType?.startsWith('image/') ?? false).map((a) => a);
 
 		const type = args.getOption('type');
 
 		if (images.length) {
-			if (type?.toLowerCase() === 'emoji') {
-				images.forEach((img) => {
-					msg.guild?.emojis.create(img.url, img.description ?? img.name ?? 'temp');
-				});
-				return msg.reply(`Adding ${images.length} images as emojis`);
-			} else if (type?.toLowerCase() === 'sticker') {
-				images.forEach((img) => {
-					msg.guild?.stickers.create(img, img.description ?? img.name ?? 'temp', '');
-				});
-
-				return msg.reply(`Adding ${images.length} images as stickers`);
+			if (type?.toLowerCase() === 'emoji')
+				images.forEach((img) => this.addEmoji(msg, img.url, img.description ?? img.name ?? 'temp'));
+			else if (type?.toLowerCase() === 'sticker') {
+				images.forEach((img) => this.addSticker(msg, img.url, img.description ?? img.name ?? 'temp'));
 			} else return msg.reply('Specify a type using `--type=emoji` or `--type=sticker`');
 		}
 
 		if (type?.toLowerCase() === 'emoji') {
-			if (stickers.length) {
-				stickers.forEach((s) => {
-					msg.guild?.emojis.create(s.url, s.name);
-				});
-				msg.reply(`Adding ${stickers.length} stickers as emojis`);
-			}
-			if (emojis.length) {
-				emojis.forEach((e) => {
-					msg.guild?.emojis.create(e.url, e.name ?? 'temp');
-				});
-				msg.reply(`Adding ${emojis.length} emojis`);
-			}
+			if (stickers.length) stickers.forEach((s) => this.addEmoji(msg, s.url, s.name));
+
+			if (emojis.length) emojis.forEach((e) => this.addEmoji(msg, e.url, e.name ?? 'temp'));
 		} else if (type?.toLowerCase() === 'sticker') {
-			if (stickers.length) {
-				stickers.forEach((s) => {
-					msg.guild?.stickers.create(s.url, s.name, '');
-				});
-				msg.reply(`Adding ${stickers.length} stickers`);
-			}
-			if (emojis.length) {
-				emojis.forEach((e) => {
-					msg.guild?.stickers.create(e.url, e.name ?? 'temp', '');
-				});
-				msg.reply(`Adding ${emojis.length} emojis as stickers`);
-			}
+			if (stickers.length) stickers.forEach((s) => this.addSticker(msg, s.url, s.name));
+
+			if (emojis.length) emojis.forEach((e) => this.addSticker(msg, e.url, e.name ?? 'temp'));
 		} else {
-			if (stickers.length) {
-				stickers.forEach((s) => {
-					msg.guild?.stickers.create(s.url, s.name, '');
-				});
-				msg.reply(`Adding ${stickers.length} stickers`);
-			}
-			if (emojis.length) {
-				emojis.forEach((e) => {
-					msg.guild?.emojis.create(e.url, e.name ?? 'temp');
-				});
-				msg.reply(`Adding ${emojis.length} emojis as stickers`);
-			}
+			if (stickers.length) stickers.forEach((s) => this.addSticker(msg, s.url, s.name));
+
+			if (emojis.length) emojis.forEach((e) => this.addEmoji(msg, e.url, e.name ?? 'temp'));
 		}
 
-		return msg.reply('Done!');
+		if (!this.addedSome) return msg.reply('Unable to parse emojis or stickers.');
+		else return;
+	}
+
+	private addSticker(msg: Message, url: string, name: string) {
+		msg.guild!.stickers.create(url, name, '🙂').then((s) => {
+			msg.reply({ content: 'Added ${s.name}', stickers: [s] });
+			this.addedSome = true;
+		});
+	}
+
+	private addEmoji(msg: Message, url: string, name: string) {
+		msg.guild!.emojis.create(url, name).then((e) => {
+			msg.reply({ content: `Added ${e}` });
+			this.addedSome = true;
+		});
 	}
 }

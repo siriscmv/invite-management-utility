@@ -13,28 +13,38 @@ export class StealCommand extends Command {
 	}
 
 	public async messageRun(msg: Message, args: Args) {
-		const sticker = (await args.pick('sticker').catch(() => []))[0];
+		const sticker = msg.stickers.first();
 		const emoji = await args.pick('emoji').catch(() => null);
-		const image = (await args.pick('image').catch(() => []))[0];
+		const image = msg.attachments.filter((a) => a.contentType?.startsWith('image/') ?? false).first();
 
 		const type = args.getOption('type');
 		const name = await args.pick('string').catch(() => null);
 
-		console.log(sticker);
-
 		if (!sticker && !emoji && !type) return msg.reply('Specify a type using `--type=emoji` or `--type=sticker`');
 
 		if (type?.toLowerCase() === 'emoji') {
-			if (sticker) msg.guild?.emojis.create(sticker.url, name ?? sticker.name);
-			else if (image) msg.guild?.emojis.create(image.url, name ?? image.description ?? image.name ?? 'temp');
+			if (sticker) this.addEmoji(msg, sticker.url, name ?? sticker.name);
+			else if (image) this.addEmoji(msg, image.url, name ?? image.description ?? image.name ?? 'temp');
 		} else if (type?.toLowerCase() === 'sticker') {
-			if (emoji) msg.guild?.stickers.create(emoji.url, name ?? emoji.name ?? 'temp', '');
-			else if (image) msg.guild?.stickers.create(image.url, name ?? image.description ?? image.name ?? 'temp', '');
+			if (emoji) this.addSticker(msg, emoji.url, name ?? emoji.name ?? 'temp');
+			else if (image) this.addSticker(msg, image.url, name ?? image.description ?? image.name ?? 'temp');
 		} else {
-			if (emoji) msg.guild?.emojis.create(emoji.url, name ?? emoji.name ?? 'temp');
-			else if (sticker) msg.guild?.stickers.create(sticker.url, name ?? sticker.name, '');
+			if (emoji) this.addEmoji(msg, emoji.url, name ?? emoji.name ?? 'temp');
+			else if (sticker) this.addSticker(msg, sticker.url, name ?? sticker.name);
 		}
 
-		return msg.reply('Done!');
+		return;
+	}
+
+	private addSticker(msg: Message, url: string, name: string) {
+		msg.guild!.stickers.create(url, name, '🙂').then((s) => {
+			msg.reply({ content: 'Added ${s.name}', stickers: [s] });
+		});
+	}
+
+	private addEmoji(msg: Message, url: string, name: string) {
+		msg.guild!.emojis.create(url, name).then((e) => {
+			msg.reply({ content: `Added ${e}` });
+		});
 	}
 }
