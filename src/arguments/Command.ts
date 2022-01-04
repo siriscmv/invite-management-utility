@@ -19,7 +19,7 @@ export class CommandArgument extends Argument<Command> {
 
 declare module '@sapphire/framework' {
 	export interface ArgType {
-		commands: Command;
+		command: Command;
 		cmd: Command;
 	}
 }
