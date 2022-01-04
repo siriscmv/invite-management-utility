@@ -8,5 +8,6 @@
 	"prefix": "-",
 	"voterRole": "887693588375408701",
 	"prefixes": ["$"],
-	"blacklistedWords": ["@everyone", "@here"]
+	"blacklistedWords": ["@everyone", "@here"],
+	"boostChannel": "906882529896853554"
 }
