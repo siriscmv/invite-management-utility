@@ -19,7 +19,7 @@ export class EvalCommand extends Command {
 		});
 	}
 	public async messageRun(message: Message, args: Args) {
-		const code = await args.rest('string');
+		const code = await args.rest('codeblock').catch(async () => await args.rest('string'));
 
 		const { result, success, type } = await this.eval(message, code, {
 			async: args.getFlags('async'),
