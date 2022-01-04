@@ -1,5 +1,5 @@
-import { User } from 'detritus-client/lib/structures';
-import { Embed } from 'detritus-client/lib/utils';
+import type { Message } from 'discord.js';
+import { MessageEmbed, TextBasedChannel, TextChannel, ThreadChannel } from 'discord.js';
 import config from './../config.json';
 
 const types = {
@@ -8,12 +8,17 @@ const types = {
 	BLACKLISTED: 'Blacklisted substring deleted'
 };
 
-export default async (type: keyof typeof types, content: string, user: User) => {
-	const embed = new Embed()
-		.setColor(16711680)
+export default async (type: keyof typeof types, msg: Message) => {
+	const embed: MessageEmbed = new MessageEmbed()
+		.setColor('RED')
 		.setTitle(types[type] ?? 'Unknown')
-		.setDescription(content)
-		.setAuthor(user.tag, user.avatarUrlFormat('png'));
+		.setDescription(msg.content)
+		.setAuthor({
+			name: msg.author.tag,
+			iconURL: msg.author.displayAvatarURL({ dynamic: true })
+		})
+		.addField('Channel', (msg.channel as TextChannel | ThreadChannel).name, true)
+		.addField('User', msg.author.toString(), true);
 
-	user.client.channels.get(config.logs)?.createMessage({ embed });
+	(msg.client.channels.cache.get(config.logs) as TextBasedChannel)?.send({ embeds: [embed] });
 };

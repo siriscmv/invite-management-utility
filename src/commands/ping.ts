@@ -1,11 +1,23 @@
-import { Context } from 'detritus-client/lib/command';
+import { Command } from '@sapphire/framework';
+import type { Message } from 'discord.js';
 
-const pingCommand: Command = {
-	name: 'ping',
-	run: async (context: Context) => {
-		const ping = await context.client.ping();
-		return context.reply(`Pong!\nGateway: \`${ping.gateway}\` ms\nRest: \`${ping.rest}\` ms`);
+export class PingCommand extends Command {
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'ping',
+			aliases: ['pong'],
+			description: "Get the bot's latency"
+		});
 	}
-};
 
-export default pingCommand;
+	public async messageRun(message: Message) {
+		const msg = await message.channel.send('Ping?');
+
+		const content = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
+			msg.createdTimestamp - message.createdTimestamp
+		}ms.`;
+
+		return msg.edit(content);
+	}
+}
