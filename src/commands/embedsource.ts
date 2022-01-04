@@ -22,7 +22,7 @@ export class EmbedSourceCommand extends Command {
 			components: m.components.map((c) => c.toJSON())
 		};
 
-		const json = JSON.stringify(args.getFlags('clean') ? this.clean(raw) : raw);
+		const json = JSON.stringify(args.getFlags('clean') ? this.clean(raw) : raw, null, '\t');
 
 		return msg.reply({
 			embeds: [
