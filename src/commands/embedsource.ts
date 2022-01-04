@@ -28,7 +28,7 @@ export class EmbedSourceCommand extends Command {
 			embeds: [
 				new MessageEmbed()
 					.setTitle('Raw JSON')
-					.addField('Source', m.url, true)
+					.addField('Source', `[Click here](${m.url})`, true)
 					.addField('Cleaned', `${args.getFlags('clean')}`, true)
 					.addField('Length', `${json.length} characters`, true)
 			],
