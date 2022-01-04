@@ -1,4 +1,3 @@
-// TypeScript:
 import { Argument, ArgumentContext, PieceContext } from '@sapphire/framework';
 
 export class CodeblockArgument extends Argument<String> {
@@ -6,9 +5,10 @@ export class CodeblockArgument extends Argument<String> {
 		super(context, { name: 'codeblock', aliases: ['cb'] });
 	}
 
+	parser = new RegExp(/```(?:(?<lang>\S+)\n)?\s?(?<code>[^]+?)\s?```/, '');
+
 	public run(parameter: string, context: ArgumentContext<string>): Argument.Result<String> {
-		const parser = new RegExp(/```(?:(?<lang>\S+)\n)?\s?(?<code>[^]+?)\s?```/, '');
-		if (parser.test(parameter)) return this.ok(parser.exec(parameter)![2]);
+		if (this.parser.test(parameter)) return this.ok(this.parser.exec(parameter)![2]);
 		return this.error({
 			parameter,
 			message: 'Unable to parse Codeblock.',

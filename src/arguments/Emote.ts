@@ -1,0 +1,43 @@
+import { Argument, ArgumentContext, PieceContext } from '@sapphire/framework';
+interface Emote {
+	name: String;
+	id: String;
+	animated: boolean;
+	url: String;
+	emoji: String;
+}
+
+export class EmojiArgument extends Argument<Emote> {
+	public constructor(context: PieceContext) {
+		super(context, { name: 'emoji' });
+	}
+
+	parser = new RegExp(/<(a?)?:(\w+):(\d{18}>)?/, '');
+
+	public run(parameter: string, context: ArgumentContext<Emote>): Argument.Result<Emote> {
+		if (this.parser.test(parameter)) {
+			const result = this.parser.exec(parameter)!;
+			return this.ok({
+				name: result[2],
+				id: result[3],
+				animated: result[1] === 'a' ? true : false,
+				url: `https://cdn.discordapp.com/emojis/${result[3]}.${
+					result[1] === 'a' ? 'gif' : 'png'
+				}?size=256&quality=lossless`,
+				emoji: `<${result[1] === 'a' ? 'a' : ''}:${result[2]}:${result[3]}>`
+			});
+		}
+
+		return this.error({
+			parameter,
+			message: 'Unable to parse emoji.',
+			context
+		});
+	}
+}
+
+declare module '@sapphire/framework' {
+	export interface ArgType {
+		emoji: Emote;
+	}
+}
