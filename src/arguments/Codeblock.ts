@@ -20,5 +20,6 @@ export class CodeblockArgument extends Argument<String> {
 declare module '@sapphire/framework' {
 	export interface ArgType {
 		codeblock: string;
+		cd: string;
 	}
 }

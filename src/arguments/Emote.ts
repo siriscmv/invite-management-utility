@@ -7,7 +7,7 @@ interface Emote {
 	emoji?: string;
 }
 
-export class EmojiArgument extends Argument<Emote> {
+export class EmoteArgument extends Argument<Emote> {
 	public constructor(context: PieceContext) {
 		super(context, { name: 'emoji' });
 	}
