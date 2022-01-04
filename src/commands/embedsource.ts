@@ -13,7 +13,9 @@ export class EmbedSourceCommand extends Command {
 	}
 
 	public async messageRun(msg: Message, args: Args) {
-		const m = await args.pick('message').catch(async () => await msg.fetchReference());
+		const m = await args
+			.pick('message')
+			.catch(async () => (msg.reference?.messageId ? await msg.fetchReference() : null));
 		if (!m) return msg.reply('Please provide a message to get the source of.');
 
 		const raw = {
