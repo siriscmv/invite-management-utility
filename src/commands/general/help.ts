@@ -19,6 +19,10 @@ export class HelpCommand extends Command {
 			const embed = new MessageEmbed()
 				.setColor(config.color as ColorResolvable)
 				.setTitle(`${this.capitalise(command.name)} Command`)
+				.setAuthor({
+					name: msg.client.user!.tag,
+					iconURL: msg.client.user!.displayAvatarURL()
+				})
 				.setDescription(command.description)
 				.addField('Aliases', command.aliases.join(', '), true)
 				.addField('Category', command.fullCategory[0], true)
