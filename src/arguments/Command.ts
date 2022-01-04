@@ -2,7 +2,7 @@ import { Argument, ArgumentContext, Command, CommandStore, PieceContext } from '
 const { container } = require('@sapphire/framework');
 export class CommandArgument extends Argument<Command> {
 	public constructor(context: PieceContext) {
-		super(context, { name: 'commands', aliases: ['cmd'] });
+		super(context, { name: 'command', aliases: ['cmd'] });
 	}
 
 	public run(parameter: string, context: ArgumentContext<Command>): Argument.Result<Command> {

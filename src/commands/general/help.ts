@@ -11,7 +11,7 @@ export class HelpCommand extends Command {
 	}
 
 	public async messageRun(msg: Message, args: Args) {
-		const command = args.pick('string');
+		const command = args.pick('command');
 
 		const content = `Pong! Bot Latency ${Math.round(this.container.client.ws.ping)}ms. API Latency ${
 			msg.createdTimestamp - msg.createdTimestamp
