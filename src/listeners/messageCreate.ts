@@ -55,7 +55,7 @@ export class MessageCreateListener extends Listener {
 			if (!msg.member?.permissions.has('MANAGE_MESSAGES')) {
 				await msg.delete();
 				log('BLACKLISTED', msg);
-				const res = await msg.reply(`Your messages contains a blacklisted word.`);
+				const res = await msg.channel.send(`${msg.author}, Your message contained a blacklisted word.`);
 				sleep(5 * 1000);
 				res.delete();
 			}
