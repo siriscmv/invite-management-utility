@@ -49,7 +49,7 @@ export class StealCommand extends Command {
 
 	private addSticker(msg: Message, url: string, name: string) {
 		msg.guild!.stickers.create(url, name, '🙂').then((s) => {
-			msg.reply({ content: 'Added ${s.name}', stickers: [s] });
+			msg.reply({ content: `Added ${s.name}`, stickers: [s] });
 			this.addedSome = true;
 		});
 	}
