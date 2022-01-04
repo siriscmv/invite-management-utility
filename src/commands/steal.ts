@@ -20,6 +20,8 @@ export class StealCommand extends Command {
 		const type = args.getOption('type');
 		const name = await args.pick('string').catch(() => null);
 
+		console.log(sticker);
+
 		if (!sticker && !emoji && !type) return msg.reply('Specify a type using `--type=emoji` or `--type=sticker`');
 
 		if (type?.toLowerCase() === 'emoji') {
