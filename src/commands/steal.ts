@@ -20,7 +20,7 @@ export class StealCommand extends Command {
 
 		const type = args.getOption('type');
 
-		if (images) {
+		if (images.length) {
 			if (type?.toLowerCase() === 'emoji') {
 				if (images.length) {
 					images.forEach((img) => {
