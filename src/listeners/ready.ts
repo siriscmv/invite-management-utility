@@ -15,5 +15,6 @@ export class ReadyListener extends Listener {
 		const { tag, id } = client.user!;
 		this.container.logger.info(`Successfully logged in as ${tag} (${id})`);
 		await client.guilds.cache.get(mainServer)?.members.fetch({ withPresences: true });
+		await client.db._init();
 	}
 }
