@@ -11,7 +11,8 @@ const client = new SapphireClient({
 
 const sequelize = new sq.Sequelize({
 	dialect: 'sqlite',
-	storage: '../database.sqlite'
+	storage: '../database.sqlite',
+	logging: false
 });
 
 client.sequelize = sequelize;
