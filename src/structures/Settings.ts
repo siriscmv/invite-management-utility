@@ -43,7 +43,7 @@ export class Settings {
 		this.ready = true;
 	}
 
-	get(key: keyof GuildSettings, guildID = '0') {
+	get(key: keyof GuildSettings, guildID = '0'): GuildSettings[typeof key] {
 		return this._guilds.get(guildID)?.[key];
 	}
 

@@ -2,25 +2,25 @@ import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import { mainServer } from '../config.json';
 import sleep from '../utils/sleep';
-import config from '../config.json';
 
 export class GuildMemberAddListener extends Listener {
 	public async run(member: GuildMember) {
 		if (member.guild.id !== mainServer) return;
 
+		if (((member.client.db?.get('autoKickBypass') ?? []) as string[]).includes(member.id)) return;
+
 		await sleep(5 * 1000);
 
-		member.client.db?.get('autoKickBypass')?.
-
-		if (!member.roles.cache.has(config.verifiedRole) && !member.premiumSince) {
+		if (Date.now() - member.user.createdTimestamp < 14 * 24 * 60 * 60 * 1000) {
+			// 14 days
 			await member.send(
 				`You were kicked from ${
 					member.guild.name
-				} for not completing the verification process time.\nYou can join again using this link: ${
-					member.guild.vanityURLCode ? `discord.gg/${member.guild.vanityURLCode}` : ''
-				}`
+				} Since your account is too young.\nDM a support staff from: discord.gg${
+					member.guild.vanityURLCode ?? 'TGUgy93RUY'
+				} to get bypass`
 			);
-			member.kick('Did not verify in time').catch(() => {});
+			member.kick('Account too young').catch(() => {});
 		}
 	}
 }

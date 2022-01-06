@@ -29,5 +29,5 @@ export interface Greet {
 
 export interface GuildSettings {
 	greet?: Greet[];
-	verificationBypass?: Snowflake[];
+	autoKickBypass?: Snowflake[];
 }
