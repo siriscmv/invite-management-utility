@@ -68,7 +68,7 @@ export class Settings {
 	async set(key: keyof GuildSettings, value: GuildSettings[keyof GuildSettings], guildID = '0') {
 		if (!value) return;
 		const settings = this._guilds.get(guildID) ?? {};
-		Object.defineProperty(settings, key, value);
+		(settings[key] as GuildSettings[keyof GuildSettings]) = value;
 
 		this._guilds.set(guildID, settings);
 		await this.raw.upsert({
