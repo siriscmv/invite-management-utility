@@ -11,8 +11,7 @@ export class GuildMemberAddListener extends Listener {
 
 		await sleep(5 * 1000);
 
-		if (Date.now() - member.user.createdTimestamp < 14 * 24 * 60 * 60 * 1000) {
-			// 14 days
+		if (Date.now() - member.user.createdTimestamp < member.client.db.get('altAge')!) {
 			await member.send(
 				`You were kicked from ${
 					member.guild.name

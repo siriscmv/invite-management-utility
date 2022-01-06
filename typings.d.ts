@@ -30,4 +30,5 @@ export interface Greet {
 export interface GuildSettings {
 	greet?: Greet[];
 	autoKickBypass?: Snowflake[];
+	altAge?: number;
 }
