@@ -1,5 +1,5 @@
 import { Listener } from '@sapphire/framework';
-import { Message, MessageEmbed, TextChannel } from 'discord.js';
+import { ColorResolvable, Message, MessageEmbed, TextChannel } from 'discord.js';
 import log from '../utils/log';
 import { emotes } from '../utils/emotes';
 import config from '../config.json';
@@ -21,6 +21,7 @@ export class MessageCreateListener extends Listener {
 						name: msg.author.tag,
 						iconURL: msg.author.displayAvatarURL({ dynamic: true })
 					})
+					.setColor(config.color as ColorResolvable)
 					.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 1h`)
 					.addField('Reason', 'Mass mentioning members', true);
 
@@ -54,6 +55,7 @@ export class MessageCreateListener extends Listener {
 							name: msg.author.tag,
 							iconURL: msg.author.displayAvatarURL({ dynamic: true })
 						})
+						.setColor(config.color as ColorResolvable)
 						.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 30s`)
 						.addField('Reason', 'Sending Invite links', true);
 
@@ -74,6 +76,7 @@ export class MessageCreateListener extends Listener {
 							name: msg.author.tag,
 							iconURL: msg.author.displayAvatarURL({ dynamic: true })
 						})
+						.setColor(config.color as ColorResolvable)
 						.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 6h`)
 						.addField('Reason', 'Sending Scam nitro links', true);
 
