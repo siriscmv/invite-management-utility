@@ -5,7 +5,6 @@
 	"logs": "916727940732055582",
 	"color": "2F3136",
 	"dot": "・",
-	"prefix": "-",
 	"voterRole": "887693588375408701",
 	"prefixes": ["$"],
 	"blacklistedWords": ["@everyone", "@here"],

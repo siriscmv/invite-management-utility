@@ -1,9 +1,33 @@
+import type { Snowflake } from 'discord.js';
+import type { Sequelize, Model, DataTypes, Optional } from 'sequelize';
+import type { Settings } from './src/structures/Settings';
+
 declare module '*.json' {
 	const value: any;
 	export default value;
 }
 
-interface Command {
-	name: string;
-	run: CommandCallbackRun;
+declare module 'discord.js' {
+	export interface Client {
+		db: Settings;
+		sequelize: Sequelize;
+	}
+}
+
+export interface DataAttributes {
+	server_id: Snowflake;
+	data: string;
+}
+
+export interface DataInstance extends Model<DataAttributes, DataAttributes>, DataAttributes {}
+
+export interface Greet {
+	channel_id: Snowflake;
+	content: Snowflake;
+	time: number;
+}
+
+export interface GuildSettings {
+	greet?: Greet[];
+	verificationBypass?: Snowflake[];
 }
