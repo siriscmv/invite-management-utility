@@ -10,9 +10,24 @@ export class MessageCreateListener extends Listener {
 	urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
 
 	public async run(msg: Message) {
-		if (msg.author.bot || msg.webhookId || msg.guildId !== config.mainServer) return;
+		if (msg.webhookId || msg.guildId !== config.mainServer) return;
 
-		if (msg.channelId === config.boostChannel) {
+		if ((msg.mentions.members?.size ?? 0) >= 5 && !msg.member?.permissions.has('MODERATE_MEMBERS')) {
+			const res = await msg.member?.timeout(1 * 60 * 60 * 1000, 'Mass mentioning members');
+			log('MASS_PING', msg);
+			if (res) {
+				const embed: MessageEmbed = new MessageEmbed()
+					.setAuthor({
+						name: msg.author.tag,
+						iconURL: msg.author.displayAvatarURL({ dynamic: true })
+					})
+					.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 1h`)
+					.addField('Reason', 'Mass mentioning members', true);
+
+				await msg.channel.send({ embeds: [embed] });
+			}
+		}
+		if (msg.channelId === config.boostChannel && !msg.author.bot) {
 			const msgs = await msg.channel.messages.fetch();
 			(msg.channel as TextChannel).bulkDelete(msgs.filter((m) => m.author.id === msg.client.user!.id));
 			if (msg.system) {

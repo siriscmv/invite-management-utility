@@ -5,7 +5,8 @@ import config from './../config.json';
 const types = {
 	INVITE_LINK: 'Invite Link deleted',
 	SCAM_LINK: 'Scam nitro link deleted',
-	BLACKLISTED: 'Blacklisted substring deleted'
+	BLACKLISTED: 'Blacklisted substring deleted',
+	MASS_PING: 'Mass ping detected'
 };
 
 export default async (type: keyof typeof types, msg: Message) => {
