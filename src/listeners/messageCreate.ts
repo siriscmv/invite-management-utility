@@ -8,6 +8,7 @@ import sleep from '../utils/sleep';
 export class MessageCreateListener extends Listener {
 	inviteRegex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/gi;
 	urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+	autoDelete = /[\u0900-\u097F]/gm;
 
 	public async run(msg: Message) {
 		if (msg.webhookId || msg.guildId !== config.mainServer) return;
@@ -94,5 +95,7 @@ export class MessageCreateListener extends Listener {
 				res.delete();
 			}
 		}
+
+		if (this.autoDelete.test(msg.content)) msg.delete();
 	}
 }
