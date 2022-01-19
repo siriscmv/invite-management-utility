@@ -17,7 +17,7 @@ export class EvalCommand extends Command {
 			options: ['depth']
 		});
 	}
-	public override async messageRun(message: Message, args: Args) {
+	public async messageRun(message: Message, args: Args) {
 		const code = await args.rest('codeblock').catch(async () => await args.rest('string'));
 
 		const { result, success, type } = await this.eval(message, code, {
@@ -45,7 +45,7 @@ export class EvalCommand extends Command {
 		return message.reply(`${output}\n${typeFooter}`);
 	}
 
-	public override async chatInputRun(interaction: CommandInteraction) {
+	public async chatInputRun(interaction: CommandInteraction) {
 		const code = interaction.options.getString('code')!;
 
 		const { result, success, type } = await this.eval(interaction, code, {
