@@ -1,5 +1,5 @@
 import { Argument, ArgumentContext, PieceContext } from '@sapphire/framework';
-interface Emote {
+export interface Emote {
 	name?: string;
 	id: string;
 	animated: boolean;
@@ -48,8 +48,3 @@ export class EmoteArgument extends Argument<Emote> {
 	}
 }
 
-declare module '@sapphire/framework' {
-	export interface ArgType {
-		emoji: Emote;
-	}
-}
