@@ -48,3 +48,8 @@ export class EmoteArgument extends Argument<Emote> {
 	}
 }
 
+declare module '@sapphire/framework' {
+	export interface ArgType {
+		emoji: Emote;
+	}
+}
