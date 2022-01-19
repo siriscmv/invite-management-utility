@@ -32,15 +32,15 @@ export class StealCommand extends Command {
 		if (type?.toLowerCase() === 'emoji') {
 			if (stickers.length) stickers.forEach((s) => this.addEmoji(msg, s.url, s.name));
 
-			if (emojis.length) emojis.forEach((e) => this.addEmoji(msg, e.url, e.name ?? 'temp'));
+			if (emojis.length) emojis.forEach((e) => this.addEmoji(msg, e.url as string, e.name ?? 'temp'));
 		} else if (type?.toLowerCase() === 'sticker') {
 			if (stickers.length) stickers.forEach((s) => this.addSticker(msg, s.url, s.name));
 
-			if (emojis.length) emojis.forEach((e) => this.addSticker(msg, e.url, e.name ?? 'temp'));
+			if (emojis.length) emojis.forEach((e) => this.addSticker(msg, e.url as string, e.name ?? 'temp'));
 		} else {
 			if (stickers.length) stickers.forEach((s) => this.addSticker(msg, s.url, s.name));
 
-			if (emojis.length) emojis.forEach((e) => this.addEmoji(msg, e.url, e.name ?? 'temp'));
+			if (emojis.length) emojis.forEach((e) => this.addEmoji(msg, e.url as string, e.name ?? 'temp'));
 		}
 
 		if (!this.addedSome) return msg.reply('Unable to parse emojis or stickers.');
