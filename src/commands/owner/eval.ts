@@ -46,7 +46,7 @@ export class EvalCommand extends Command {
 		return message.reply(`${output}\n${typeFooter}`);
 	}
 
-	public async slashRun(interaction: CommandInteraction) {
+	public async chatInputRun(interaction: CommandInteraction) {
 		const code = interaction.options.getString('code')!;
 
 		const { result, success, type } = await this.eval(interaction, code, {
