@@ -23,10 +23,10 @@ export class ShellCommand extends Command {
 
     const { stdout, stderr } = await exec(code).catch((e: ExecException) => ({ stdout: '', stderr: inspect(e) }));
 
-    const output = stdout ? codeBlock('bash', stdout) : `**ERROR**: ${codeBlock('bash', stderr)}`;
+    const output = stderr ? `**ERROR**: ${codeBlock('bash', stderr)}` : codeBlock('bash', stdout || 'Done');
     if (args.getFlags('silent', 's')) {
-      if (stdout) message.react(emotes.yes);
-      else message.react(emotes.no);
+      if (stderr) message.react(emotes.no);
+      else message.react(emotes.yes);
       return null;
     }
     
