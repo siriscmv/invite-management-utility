@@ -1,7 +1,7 @@
 import { Args, Command } from '@sapphire/framework';
 import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
-import type { Message } from 'discord.js';
+import type { CommandInteraction, Message } from 'discord.js';
 import { inspect } from 'util';
 import { emotes } from '../../utils/emotes';
 
@@ -46,13 +46,40 @@ export class EvalCommand extends Command {
 		return message.reply(`${output}\n${typeFooter}`);
 	}
 
-	private async eval(message: Message, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
+	public async slashRun(interaction: CommandInteraction) {
+		const code = interaction.options.getString('code')!;
+
+		const { result, success, type } = await this.eval(interaction, code, {
+			async: interaction.options.getBoolean('async') ?? false,
+			depth: interaction.options.getInteger('depth') ?? 0,
+			showHidden: interaction.options.getBoolean('showHidden') ?? false
+		});
+
+		const output = success ? codeBlock('js', result) : `**ERROR**: ${codeBlock('bash', result)}`;
+
+		const typeFooter = `**Type**: ${codeBlock('typescript', type)}`;
+
+		if (output.length > 2000) {
+			return interaction.reply({
+				content: `Output was too long... sent the result as a file.\n\n${typeFooter}`,
+				files: [{ attachment: Buffer.from(output), name: 'output.js' }],
+				ephemeral: interaction.options.getBoolean('hidden') ?? false
+			});
+		}
+
+		return interaction.reply({
+			content: `${output}\n${typeFooter}`,
+			ephemeral: interaction.options.getBoolean('hidden') ?? false
+		});
+	}
+	
+	private async eval(ctx: Message | CommandInteraction, code: string, flags: { async: boolean; depth: number; showHidden: boolean }) {
 		if (flags.async) code = `(async () => {\n${code}\n})();`;
 
 		// @ts-expect-error value is never read, this is so `msg` is possible as an alias when sending the eval.
 		// eslint-disable-next-line @typescript-eslint/no-unused-vars
-		const msg = message;
-
+		const msg = ctx; const interaction = ctx; 
+		
 		let success = true;
 		let result = null;
 
