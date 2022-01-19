@@ -10,7 +10,6 @@ export class EvalCommand extends Command {
 		super(context, {
 			...options,
 			name: 'eval',
-			aliases: ['pong'],
 			description: 'Evals any JavaScript code',
 			quotes: [],
 			preconditions: ['OwnerOnly'],
