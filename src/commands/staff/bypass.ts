@@ -12,7 +12,7 @@ export class VerifyBypassCommand extends Command {
 
 	public async messageRun(msg: Message, args: Args) {
 		const current = msg.client.db.get('autoKickBypass') as string[];
-		const user = await args.pick('user');
+		const user = await args.pick('user').catch(() => null);
 
 		if (!user) return msg.reply('Please specify a user to bypass');
 
