@@ -9,8 +9,10 @@
 	"prettier": "@sapphire/prettier-config",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-		"start": "tsc && node -r dotenv/config ./prod/index.js",
-		"pm2": "tsc && pm2 start pm2.config.js"
+		"start": "node -r dotenv/config ./prod/index.js",
+		"pm2": "pm2 start pm2.config.js",
+		"clean": "rm -rf prod && mkdir prod",
+		"build": "npm run clean && tsc"
 	},
 	"repository": {
 		"type": "git",
