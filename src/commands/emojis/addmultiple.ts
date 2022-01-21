@@ -16,7 +16,7 @@ export class StealCommand extends Command {
 
 	public async messageRun(msg: Message, args: Args) {
 		const stickers = msg.stickers.map((s) => s);
-		const emojis = await args.repeat('emoji').catch(() => []);
+		const emojis = await args.repeat('emote').catch(() => []);
 		const images = msg.attachments.filter((a) => a.contentType?.startsWith('image/') ?? false).map((a) => a);
 
 		const type = args.getOption('type');

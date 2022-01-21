@@ -9,7 +9,7 @@ export interface Emote {
 
 export class EmoteArgument extends Argument<Emote> {
 	public constructor(context: PieceContext) {
-		super(context, { name: 'emoji' });
+		super(context, { name: 'emote' });
 	}
 
 	parser = new RegExp(/<(a?)?:(\w+):(\d{18})>?/, '');
@@ -50,6 +50,6 @@ export class EmoteArgument extends Argument<Emote> {
 
 declare module '@sapphire/framework' {
 	export interface ArgType {
-		emoji: Emote;
+		emote: Emote;
 	}
 }
