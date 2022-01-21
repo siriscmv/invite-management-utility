@@ -21,14 +21,15 @@ export class StealCommand extends Command {
 		const name = await args.pick('string').catch(() => null);
 
 		if (!sticker && !emoji && !type) return msg.reply('Specify a type using `--type=emoji` or `--type=sticker`');
-
 		if (type?.toLowerCase() === 'emoji') {
 			if (sticker) this.addEmoji(msg, sticker.url, name ?? sticker.name);
 			else if (image) this.addEmoji(msg, image.url, name ?? image.description ?? image.name ?? 'temp');
-		} else if (type?.toLowerCase() === 'sticker') {// @ts-ignore
+		} else if (type?.toLowerCase() === 'sticker') {
+			// @ts-ignore
 			if (emoji) this.addSticker(msg, emoji.url, name ?? emoji.name ?? 'temp');
 			else if (image) this.addSticker(msg, image.url, name ?? image.description ?? image.name ?? 'temp');
-		} else { // @ts-ignore
+		} else {
+			// @ts-ignore
 			if (emoji) this.addEmoji(msg, emoji.url, name ?? emoji.name ?? 'temp');
 			else if (sticker) this.addSticker(msg, sticker.url, name ?? sticker.name);
 		}
