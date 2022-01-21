@@ -18,7 +18,7 @@ export class GuildMemberUpdateListener extends Listener {
 					baseEmbed
 						.setColor('RED')
 						.setDescription(
-							`${newMember} unboosted :/\nThey started boosted <t:${Math.round(
+							`${newMember} unboosted :/\nThey started boosting <t:${Math.round(
 								oldMember.premiumSinceTimestamp / 1000
 							)}:R>`
 						)
