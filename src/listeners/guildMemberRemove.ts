@@ -15,9 +15,9 @@ export class GuildMemberRemoveListener extends Listener {
 			log.send({
 				embeds: [
 					baseEmbed
-						.setColor('DARK_RED')
+						.setColor('RED')
 						.setDescription(
-							`${member} booster left :/\nThey started boosted <t:${Math.round(
+							`${member} booster left :/\nThey started boosting <t:${Math.round(
 								(member.premiumSinceTimestamp ?? 0) / 1000
 							)}:R>`
 						)
