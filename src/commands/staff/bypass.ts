@@ -6,7 +6,8 @@ export class VerifyBypassCommand extends Command {
 		super(context, {
 			...options,
 			name: 'bypass',
-			description: 'Prevent a member from being kicked due to low account age'
+			description: 'Prevent a member from being kicked due to low account age',
+			preconditions: ['StaffOnly']
 		});
 	}
 
