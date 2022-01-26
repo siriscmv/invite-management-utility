@@ -1,5 +1,4 @@
-import { Argument, ArgumentContext, Command, CommandStore, PieceContext } from '@sapphire/framework';
-const { container } = require('@sapphire/framework');
+import { Argument, ArgumentContext, Command, CommandStore, PieceContext, container } from '@sapphire/framework';
 export class CommandArgument extends Argument<Command> {
 	public constructor(context: PieceContext) {
 		super(context, { name: 'command', aliases: ['cmd'] });

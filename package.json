@@ -6,6 +6,7 @@
 	"eslintConfig": {
 		"extends": "@sapphire"
 	},
+	"type": "module",
 	"prettier": "@sapphire/prettier-config",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
