@@ -8,11 +8,11 @@ export class GuildMemberAddListener extends Listener {
 
 		if (((member.client.db?.get('autoKickBypass') ?? []) as string[]).includes(member.id)) return;
 
-		const user = await member.user.fetch();
-		if (user.avatar?.startsWith('a_') || user.banner) return;
+		const user = await member.user.fetch(true);
+		if ((user.avatar && user.avatar.startsWith('a_')) || user.banner) return;
 
-		if (Date.now() - member.user.createdTimestamp < member.client.db.get('altAge')!) {
-			await member
+		if (Date.now() - user.createdTimestamp < user.client.db.get('altAge')!) {
+			await user
 				.send(
 					`You were Banned from ${member.guild.name}, since your account is too young.\nYou may join https://discord.gg/dcSQfdNr8s and ping a staff member if you wish to get unbanned`
 				)
