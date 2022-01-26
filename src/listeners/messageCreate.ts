@@ -4,10 +4,11 @@ import log from '../utils/log';
 import { emotes } from '../utils/emotes';
 import config from '../config.json';
 import sleep from '../utils/sleep';
+import fetch from 'node-fetch';
 
 export class MessageCreateListener extends Listener {
 	inviteRegex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/gi;
-	urlRegex = /https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)/gi;
+	domainRegex = /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/gi;
 	autoDelete = /[\u0900-\u097F]/gm;
 
 	public async run(msg: Message) {
@@ -65,25 +66,53 @@ export class MessageCreateListener extends Listener {
 			}
 		}
 
-		if (this.urlRegex.test(msg.content) && msg.content.toLowerCase().includes('nitro')) {
-			if (!msg.member?.permissions.has('MANAGE_MESSAGES')) {
-				await msg.delete();
-				log('SCAM_LINK', msg);
+		if (this.domainRegex.test(msg.content)) {
+			const res = await fetch('https://anti-fish.bitflow.dev/check', {
+				method: 'POST',
+				body: JSON.stringify({
+					message: msg.content.match(this.domainRegex)!.join(' ')
+				}),
+				headers: { 'User-Agent': `${msg.client.user!.username} (${msg.client.user!.id})` }
+			});
 
-				const res = await msg.member?.timeout(6 * 60 * 60 * 1000, 'Sending Scam nitro links');
-				if (res) {
-					const embed: MessageEmbed = new MessageEmbed()
-						.setAuthor({
-							name: msg.author.tag,
-							iconURL: msg.author.displayAvatarURL({ dynamic: true })
-						})
-						.setColor(config.color as ColorResolvable)
-						.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 6h`)
-						.addField('Reason', 'Sending Scam nitro links', true);
+			if (!res.ok) return console.log('Unable to connect with anti-fish API!');
 
-					await msg.channel.send({ embeds: [embed], content: `${msg.author} please reset your password asap` });
-				}
-			}
+			const data = (await res.json()) as {
+				match: boolean;
+				matches?: {
+					followed: boolean;
+					domain: string;
+					source: string;
+					type: 'PHISHING' | 'IP_LOGGER';
+					trust_rating: number;
+				}[];
+			};
+
+			if (!data.match) return;
+
+			await msg.delete();
+			log('SCAM_LINK', msg);
+
+			const timedOut = await msg.member?.timeout(2 * 60 * 60 * 1000, 'Sending scam links');
+			if (!timedOut) return;
+
+			const embed: MessageEmbed = new MessageEmbed()
+				.setAuthor({
+					name: msg.author.tag,
+					iconURL: msg.author.displayAvatarURL({ dynamic: true })
+				})
+				.setColor(config.color as ColorResolvable)
+				.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 2h`)
+				.addField('Reason', 'Sending scam links', true);
+
+			data.matches!.forEach((match, i) => {
+				embed.addField(
+					`Match #${i + 1}`,
+					`Source: \`${match.source}\`${config.dot}Confidence: \`${Math.round(match.trust_rating * 100)}%\``
+				);
+			});
+
+			await msg.channel.send({ embeds: [embed] });
 		}
 
 		if (config.blacklistedWords.some((word) => msg.content.toLowerCase().includes(word))) {

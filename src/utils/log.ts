@@ -4,7 +4,7 @@ import config from './../config.json';
 
 const types = {
 	INVITE_LINK: 'Invite Link deleted',
-	SCAM_LINK: 'Scam nitro link deleted',
+	SCAM_LINK: 'Scam link deleted',
 	BLACKLISTED: 'Blacklisted substring deleted',
 	MASS_PING: 'Mass ping detected'
 };
