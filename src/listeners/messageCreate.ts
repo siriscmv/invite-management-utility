@@ -1,9 +1,9 @@
 import { Listener } from '@sapphire/framework';
 import { ColorResolvable, Message, MessageEmbed, TextChannel } from 'discord.js';
-import log from '../utils/log';
-import { emotes } from '../utils/emotes';
+import log from '../utils/log.js';
+import { emotes } from '../utils/emotes.js';
 import * as config from '../config.js';
-import sleep from '../utils/sleep';
+import sleep from '../utils/sleep.js';
 import fetch from 'node-fetch';
 
 export class MessageCreateListener extends Listener {

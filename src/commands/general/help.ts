@@ -1,7 +1,6 @@
-import { Args, Command, CommandStore } from '@sapphire/framework';
+import { Args, Command, CommandStore, container } from '@sapphire/framework';
 import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
 import * as config from '../../config.js';
-const { container } = require('@sapphire/framework');
 
 export class HelpCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {
