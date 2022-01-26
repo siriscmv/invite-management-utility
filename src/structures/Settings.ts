@@ -1,10 +1,8 @@
 import type { SapphireClient } from '@sapphire/framework';
-import type { Collection } from 'discord.js';
 import type { ModelStatic } from 'sequelize/dist';
 import type { DataInstance, GuildSettings } from '../../typings';
-
-const Discord = require('discord.js');
-const Sequelize = require('sequelize');
+import { Collection } from 'discord.js';
+import Sequelize from 'sequelize';
 
 export interface Settings {
 	client: SapphireClient;
@@ -31,7 +29,7 @@ export class Settings {
 		});
 
 		this.raw = db;
-		this._guilds = new Discord.Collection();
+		this._guilds = new Collection();
 		await this.raw.sync();
 
 		const allData = await this.raw.findAll();
