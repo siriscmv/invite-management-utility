@@ -67,8 +67,22 @@ export class MessageCreateListener extends Listener {
 		}
 
 		if (this.domainRegex.test(msg.content)) {
+			const trustedDomains = [
+				'discord.gg',
+				'discord.com',
+				'youtube.com',
+				'twitter.com',
+				'instagram.com',
+				'facebook.com'
+			];
+
+			const domains = [...new Set(msg.content.match(this.domainRegex))].filter(
+				(link) => !trustedDomains.includes(link)
+			);
+			if (domains.length === 0) return;
+
 			const data = JSON.stringify({
-				message: msg.content.match(this.domainRegex)!.join(' ')
+				message: domains.join(' ')
 			});
 
 			const res = await fetch('https://anti-fish.bitflow.dev/check', {
