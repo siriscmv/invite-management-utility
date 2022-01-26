@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type { Interaction } from 'discord.js';
-import config from '../config.json';
+import * as config from '../config.js';
 
 export class InteractionCreateListener extends Listener {
 	public async run(interaction: Interaction) {

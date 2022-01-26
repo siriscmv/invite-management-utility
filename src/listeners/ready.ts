@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type { Client } from 'discord.js';
-import { mainServer } from '../config.json';
+import { mainServer } from '../config.js';
 
 export class ReadyListener extends Listener {
 	public constructor(context: Listener.Context, options: Listener.Options) {

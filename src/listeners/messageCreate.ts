@@ -2,7 +2,7 @@ import { Listener } from '@sapphire/framework';
 import { ColorResolvable, Message, MessageEmbed, TextChannel } from 'discord.js';
 import log from '../utils/log';
 import { emotes } from '../utils/emotes';
-import config from '../config.json';
+import * as config from '../config.js';
 import sleep from '../utils/sleep';
 import fetch from 'node-fetch';
 

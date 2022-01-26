@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
-import { mainServer, boostLogs } from '../config.json';
+import { mainServer, boostLogs } from '../config.js';
 
 export class GuildMemberUpdateListener extends Listener {
 	public async run(oldMember: GuildMember, newMember: GuildMember) {

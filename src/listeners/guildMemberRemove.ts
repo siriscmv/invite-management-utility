@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
-import { mainServer, boostLogs, boosterRole } from '../config.json';
+import { mainServer, boostLogs, boosterRole } from '../config.js';
 
 export class GuildMemberRemoveListener extends Listener {
 	public async run(member: GuildMember) {

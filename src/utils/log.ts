@@ -1,6 +1,6 @@
 import type { ColorResolvable, Message } from 'discord.js';
 import { MessageEmbed, TextBasedChannel, TextChannel, ThreadChannel } from 'discord.js';
-import config from './../config.json';
+import * as config from '../config.js';
 
 const types = {
 	INVITE_LINK: 'Invite Link deleted',

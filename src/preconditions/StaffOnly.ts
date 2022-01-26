@@ -1,6 +1,6 @@
 import { Precondition } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { owners, mainServer, staffRoles } from '../config.json';
+import { owners, mainServer, staffRoles } from '../config.js';
 
 export class StaffOnlyPrecondition extends Precondition {
 	public async run(message: Message) {

@@ -1,6 +1,6 @@
 import { Args, Command, CommandStore } from '@sapphire/framework';
 import { ColorResolvable, Message, MessageEmbed } from 'discord.js';
-import config from '../../config.json';
+import * as config from '../../config.js';
 const { container } = require('@sapphire/framework');
 
 export class HelpCommand extends Command {

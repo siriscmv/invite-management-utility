@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type { Presence, TextChannel } from 'discord.js';
-import { uptimeLogs, owners, mainServer, mainBot } from '../config.json';
+import { uptimeLogs, owners, mainServer, mainBot } from '../config.js';
 
 export class PresenceUpdateListener extends Listener {
 	public async run(oldPresence: Presence, newPresence: Presence) {

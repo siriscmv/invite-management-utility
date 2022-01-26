@@ -1,6 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
-import { mainServer } from '../config.json';
+import { mainServer } from '../config.js';
 
 export class GuildMemberAddListener extends Listener {
 	public async run(member: GuildMember) {
