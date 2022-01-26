@@ -67,17 +67,25 @@ export class MessageCreateListener extends Listener {
 		}
 
 		if (this.domainRegex.test(msg.content)) {
-			const res = await fetch('https://anti-fish.bitflow.dev/check', {
-				method: 'POST',
-				body: JSON.stringify({
-					message: msg.content.match(this.domainRegex)!.join(' ')
-				}),
-				headers: { 'User-Agent': `${msg.client.user!.username} (${msg.client.user!.id})` }
+			const data = JSON.stringify({
+				message: msg.content.match(this.domainRegex)!.join(' ')
 			});
 
-			if (!res.ok) return console.log('Unable to connect with anti-fish API!');
+			const res = await fetch('https://anti-fish.bitflow.dev/check', {
+				method: 'POST',
+				body: data,
+				headers: {
+					'User-Agent': `${msg.client.user!.username} (${msg.client.user!.id})`,
+					'Content-Type': 'application/json',
+					'Content-Length': `${data.length}`
+				}
+			}).catch((e) => {
+				console.log('Unable to connect with anti-fish API!', e);
+				return null;
+			});
+			if (!res) return;
 
-			const data = (await res.json()) as {
+			const response = (await res.json()) as {
 				match: boolean;
 				matches?: {
 					followed: boolean;
@@ -88,7 +96,7 @@ export class MessageCreateListener extends Listener {
 				}[];
 			};
 
-			if (!data.match) return;
+			if (!response.match) return;
 
 			await msg.delete();
 			log('SCAM_LINK', msg);
@@ -105,7 +113,7 @@ export class MessageCreateListener extends Listener {
 				.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 2h`)
 				.addField('Reason', 'Sending scam links', true);
 
-			data.matches!.forEach((match, i) => {
+			response.matches!.forEach((match, i) => {
 				embed.addField(
 					`Match #${i + 1}`,
 					`Source: \`${match.source}\`${config.dot}Confidence: \`${Math.round(match.trust_rating * 100)}%\``
