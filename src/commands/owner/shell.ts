@@ -4,7 +4,6 @@ import type { ExecException } from 'child_process';
 import type { Message } from 'discord.js';
 import { inspect, promisify } from 'util';
 import { emotes } from '../../utils/emotes.js';
-const exec = promisify(require('child_process').exec);
 
 export class ShellCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {
@@ -18,8 +17,10 @@ export class ShellCommand extends Command {
 			flags: ['silent', 's']
 		});
 	}
+
 	public async messageRun(message: Message, args: Args) {
 		const code = await args.rest('string');
+		const exec = promisify((await import('child_process')).exec);
 
 		const { stdout, stderr } = await exec(code).catch((e: ExecException) => ({ stdout: '', stderr: inspect(e) }));
 
