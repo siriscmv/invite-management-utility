@@ -8,6 +8,9 @@ export class GuildMemberAddListener extends Listener {
 
 		if (((member.client.db?.get('autoKickBypass') ?? []) as string[]).includes(member.id)) return;
 
+		const user = await member.user.fetch();
+		if (user.avatar?.startsWith('a_') || user.banner) return;
+
 		if (Date.now() - member.user.createdTimestamp < member.client.db.get('altAge')!) {
 			await member
 				.send(
