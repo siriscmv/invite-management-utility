@@ -148,5 +148,13 @@ export class MessageCreateListener extends Listener {
 		}
 
 		if (this.autoDelete.test(msg.content)) msg.delete();
+
+		if (msg.channelId === config.automatedSupport) {
+			const res = msg.client.classifier.getClassifications(msg.content);
+			if (res[0].value <= 0.5)
+				return msg.client.webhooks.get('AI_SUPPORT').send('Unable to classify message <:um:916969699923882035>');
+
+			msg.client.webhooks.get('AI_SUPPORT').send(res[0].label);
+		}
 	}
 }

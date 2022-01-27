@@ -16,3 +16,4 @@ export const boosterRole = '906531619886743573';
 export const boostPerks = 'https://discord.com/channels/874644312200212500/906882529896853554/906882563824582667';
 export const adminRole = '874644810277990450';
 export const staffRoles = ['893483433538510898'];
+export const automatedSupport = '936160501614936114';

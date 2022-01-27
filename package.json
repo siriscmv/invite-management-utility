@@ -12,8 +12,7 @@
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
 		"start": "node -r dotenv/config ./prod/index.js",
 		"pm2": "pm2 start imu.yml",
-		"clean": "rm -rf prod && mkdir prod",
-		"build": "npm run clean && tsc"
+		"build": "rm -rf prod && mkdir prod && tsc"
 	},
 	"repository": {
 		"type": "git",
@@ -29,6 +28,7 @@
 		"@sapphire/eslint-config": "^4.0.8",
 		"@sapphire/prettier-config": "^1.2.7",
 		"@sapphire/ts-config": "^3.1.6",
+		"@types/natural": "^5.1.0",
 		"@types/node": "^17.0.5",
 		"eslint": "^8.6.0",
 		"prettier": "2.5.1",
@@ -44,6 +44,7 @@
 		"@types/util.promisify": "^1.0.4",
 		"discord.js": "^13.5.0",
 		"dotenv": "^10.0.0",
+		"natural": "^5.1.13",
 		"node-fetch": "^3.2.0",
 		"sequelize": "^6.12.5",
 		"sqlite3": "^5.0.2"

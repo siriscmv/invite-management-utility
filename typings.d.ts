@@ -1,4 +1,5 @@
 import type { Snowflake } from 'discord.js';
+import type { BayesClassifier } from 'natural';
 import type { Sequelize, Model, DataTypes, Optional } from 'sequelize';
 import type { Settings } from './src/structures/Settings';
 
@@ -11,6 +12,8 @@ declare module 'discord.js' {
 	export interface Client {
 		db: Settings;
 		sequelize: Sequelize;
+		classifier: BayesClassifier;
+		webhooks: Collection<'AI_SUPPORT' | 'LOGS', WebhookClient>;
 	}
 }
 
