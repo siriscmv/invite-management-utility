@@ -40,7 +40,7 @@ export class TagsCommand extends Command {
 
 	private async add(msg: Message, args: Args) {
 		const trigger = await args.pick('string');
-		const response = await args.rest('message').catch(() => args.pick('string'));
+		const response = await args.rest('message').catch(() => args.rest('string'));
 		const data =
 			response instanceof Message
 				? JSON.stringify({ content: response.content, embeds: response.embeds, components: response.components })
