@@ -15,7 +15,7 @@ export class TagsCommand extends Command {
 	}
 
 	public async messageRun(message: Message, args: Args) {
-		const subCommand = await args.pick('string');
+		const subCommand = await args.pick('string').catch(() => null);
 		if (subCommand === 'list') return this.list(message);
 		if (subCommand === 'view' || subCommand === 'show') return this.view(message, args);
 		if (subCommand === 'add' || subCommand === '+') return this.add(message, args);
