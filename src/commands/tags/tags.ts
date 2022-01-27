@@ -46,7 +46,7 @@ export class TagsCommand extends Command {
 				? JSON.stringify({ content: response.content, embeds: response.embeds, components: response.components })
 				: JSON.stringify(response);
 
-		await msg.client.tags.add(trigger, data);
+		await msg.client.tags.set(trigger, data);
 		return msg.reply(`Tag added with name \`${trigger}\``);
 	}
 
