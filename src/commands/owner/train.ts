@@ -1,6 +1,6 @@
 import { Args, Command } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import { emotes } from '../../utils/emotes';
+import { emotes } from '../../utils/emotes.js';
 
 export class TrainCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {
