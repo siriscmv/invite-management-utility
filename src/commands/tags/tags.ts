@@ -15,11 +15,11 @@ export class TagsCommand extends Command {
 	}
 
 	public async messageRun(message: Message, args: Args) {
-		const subCommand = await args.rest('string');
+		const subCommand = await args.pick('string');
 		if (subCommand === 'list') return this.list(message);
-		if (subCommand === 'view') return this.view(message, args);
-		if (subCommand === 'add') return this.add(message, args);
-		if (subCommand === 'delete') return this.delete(message, args);
+		if (subCommand === 'view' || subCommand === 'show') return this.view(message, args);
+		if (subCommand === 'add' || subCommand === '+') return this.add(message, args);
+		if (subCommand === 'delete' || subCommand === '-') return this.delete(message, args);
 		return message.reply('Invalid subcommand.\nUse `list`, `view`, `add`, or `delete`.');
 	}
 
