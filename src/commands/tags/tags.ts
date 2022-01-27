@@ -24,7 +24,7 @@ export class TagsCommand extends Command {
 	}
 
 	private async list(msg: Message) {
-		const tags = await (msg.client as SapphireClient).tags.findAll();
+		const tags = await (msg.client as SapphireClient).tags.raw.findAll();
 		const tagList = tags.map(
 			(tag: { trigger: any; createdAt: string | number | Date }) =>
 				`**${tag.trigger}** <t:${Math.round(new Date(tag.createdAt).getTime() / 1000)}:R>`
