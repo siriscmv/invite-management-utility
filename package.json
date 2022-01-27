@@ -42,6 +42,7 @@
 		"@sapphire/type": "^2.1.2",
 		"@types/sequelize": "^4.28.11",
 		"@types/util.promisify": "^1.0.4",
+		"compromise": "^13.11.4",
 		"discord.js": "^13.5.0",
 		"dotenv": "^10.0.0",
 		"natural": "^5.1.13",

@@ -1,5 +1,13 @@
 import { Listener } from '@sapphire/framework';
-import { ColorResolvable, Message, MessageEmbed, TextChannel } from 'discord.js';
+import {
+	ColorResolvable,
+	Message,
+	MessageActionRow,
+	MessageButton,
+	MessageEmbed,
+	TextChannel,
+	WebhookClient
+} from 'discord.js';
 import log from '../utils/log.js';
 import { emotes } from '../utils/emotes.js';
 import * as config from '../config.js';
@@ -12,7 +20,7 @@ export class MessageCreateListener extends Listener {
 	autoDelete = /[\u0900-\u097F]/gm;
 
 	public async run(msg: Message) {
-		if (msg.webhookId || msg.guildId !== config.mainServer) return;
+		if (msg.author.bot || msg.webhookId || msg.guildId !== config.mainServer) return;
 
 		if ((msg.mentions.members?.size ?? 0) >= 5 && !msg.member?.permissions.has('MODERATE_MEMBERS')) {
 			const res = await msg.member?.timeout(1 * 60 * 60 * 1000, 'Mass mentioning members');
@@ -149,12 +157,26 @@ export class MessageCreateListener extends Listener {
 
 		if (this.autoDelete.test(msg.content)) msg.delete();
 
+		if (msg.content.startsWith(msg.client.tags.prefix)) {
+			const trigger = msg.content.slice(msg.client.tags.prefix.length);
+			const data = msg.client.tags.get(trigger);
+			if (data) msg.reply(JSON.parse(data));
+		}
+
 		if (msg.channelId === config.automatedSupport) {
 			const res = msg.client.classifier.getClassifications(msg.content);
 			if (res[0].value <= 0.5)
 				return msg.client.webhooks.get('AI_SUPPORT').send('Unable to classify message <:um:916969699923882035>');
 
-			msg.client.webhooks.get('AI_SUPPORT').send(res[0].label);
+			const button = new MessageButton()
+				.setStyle('PRIMARY')
+				.setDisabled()
+				.setCustomId('AI_SUPPORT')
+				.setLabel(`Confidence: ${Math.round(res[0].value * 100)}%`);
+
+			const comp = new MessageActionRow().setComponents([button]);
+
+			(msg.client.webhooks.get('AI_SUPPORT') as WebhookClient).send({ content: res[0].label, components: [comp] });
 		}
 	}
 }
