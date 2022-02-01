@@ -49,10 +49,20 @@ export class MessageCreateListener extends Listener {
 			}
 			const embed = new MessageEmbed()
 				.setColor('#e659f3')
-				.setTitle('Boost Perks')
-				.setDescription(`${emotes.boost} [Click here](${config.boostPerks})`);
+				.setTitle('Boost Perks');
+			
+			const button = new MessageButton()
+				.setStyle('LINK')
+				.setURL(`${config.boostPerks}`)
+				.setEmoji(`${emotes.boost}`)
+				.setCustomId('BOOST_PERKS')
+				.setLabel('Click here');
+			
 
-			msg.channel.send({ embeds: [embed] });
+			const comp = new MessageActionRow().setComponents([button]);
+			
+			
+			msg.channel.send({ embeds: [embed], components: [comp] });
 		}
 
 		if (this.inviteRegex.test(msg.content)) {
