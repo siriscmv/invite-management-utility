@@ -47,21 +47,16 @@ export class MessageCreateListener extends Listener {
 					`${msg.author} Thank you for boosting!, make a ticket in <#${config.ticketChannel}> to claim your perks.`
 				);
 			}
-			const embed = new MessageEmbed()
-				.setColor('#e659f3')
-				.setTitle('Boost Perks');
-			
+			const embed = new MessageEmbed().setColor('#e659f3').setTitle('Boost Perks');
+
 			const button = new MessageButton()
 				.setStyle('LINK')
 				.setURL(`${config.boostPerks}`)
 				.setEmoji(`${emotes.boost}`)
-				.setCustomId('BOOST_PERKS')
 				.setLabel('Click here');
-			
 
 			const comp = new MessageActionRow().setComponents([button]);
-			
-			
+
 			msg.channel.send({ embeds: [embed], components: [comp] });
 		}
 
