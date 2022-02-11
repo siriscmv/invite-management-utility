@@ -1,11 +1,15 @@
 import { Listener } from '@sapphire/framework';
 import {
 	ColorResolvable,
+	DMChannel,
 	Message,
 	MessageActionRow,
 	MessageButton,
 	MessageEmbed,
+	NewsChannel,
+	PartialDMChannel,
 	TextChannel,
+	ThreadChannel,
 	WebhookClient
 } from 'discord.js';
 import log from '../utils/log.js';
@@ -13,6 +17,7 @@ import { emotes } from '../utils/emotes.js';
 import * as config from '../config.js';
 import sleep from '../utils/sleep.js';
 import fetch from 'node-fetch';
+import type { Ticket } from '../structures/Ticket.js';
 
 export class MessageCreateListener extends Listener {
 	inviteRegex = /(https?:\/\/)?(www\.)?(discord\.(gg|io|me|li)|discordapp\.com\/invite)\/.+[a-z]/gi;
@@ -23,7 +28,11 @@ export class MessageCreateListener extends Listener {
 	public async run(msg: Message) {
 		if (msg.author.bot || msg.webhookId || msg.guildId !== config.mainServer) return;
 
-		if ((msg.mentions.members?.size ?? 0) >= 5 && !msg.member?.permissions.has('MODERATE_MEMBERS')) {
+		if (
+			(msg.mentions.members?.size ?? 0) >= 5 &&
+			!msg.member?.permissions.has('MODERATE_MEMBERS') &&
+			!this.isTicket(msg.channel)
+		) {
 			const res = await msg.member?.timeout(1 * 60 * 60 * 1000, 'Mass mentioning members');
 			log('MASS_PING', msg);
 			if (res) {
@@ -60,7 +69,7 @@ export class MessageCreateListener extends Listener {
 			msg.channel.send({ embeds: [embed], components: [comp] });
 		}
 
-		if (this.inviteRegex.test(msg.content)) {
+		if (this.inviteRegex.test(msg.content) && !this.isTicket(msg.channel)) {
 			if (!msg.member?.permissions.has('MANAGE_MESSAGES')) {
 				await msg.delete();
 				log('INVITE_LINK', msg);
@@ -151,7 +160,10 @@ export class MessageCreateListener extends Listener {
 			await msg.channel.send({ embeds: [embed] });
 		}
 
-		if (config.blacklistedWords.some((word) => msg.content.toLowerCase().includes(word))) {
+		if (
+			config.blacklistedWords.some((word) => msg.content.toLowerCase().includes(word)) &&
+			!this.isTicket(msg.channel)
+		) {
 			if (!msg.member?.permissions.has('MANAGE_MESSAGES')) {
 				await msg.delete();
 				log('BLACKLISTED', msg);
@@ -186,5 +198,9 @@ export class MessageCreateListener extends Listener {
 				components: [comp]
 			});
 		}
+	}
+
+	private isTicket(channel: DMChannel | PartialDMChannel | TextChannel | ThreadChannel | NewsChannel) {
+		return channel.client.tickets.some((t: Ticket) => t.channel?.id === channel.id);
 	}
 }

@@ -2,6 +2,7 @@ import type { Snowflake } from 'discord.js';
 import type { BayesClassifier } from 'natural';
 import type { Sequelize, Model, DataTypes, Optional } from 'sequelize';
 import type { Settings, KnowledgeBase, Tags } from './src/structures/Settings';
+import type { Ticket } from './src/structures/Ticket';
 
 declare module '*.json' {
 	const value: any;
@@ -16,6 +17,7 @@ declare module 'discord.js' {
 		sequelize: Sequelize;
 		classifier: BayesClassifier;
 		webhooks: Collection<'AI_SUPPORT' | 'LOGS', WebhookClient>;
+		tickets: Collection<string, Ticket>;
 	}
 }
 
@@ -52,6 +54,7 @@ export interface GuildSettings {
 	greet?: Greet[];
 	autoKickBypass?: Snowflake[];
 	altAge?: number;
+	ticketCounter?: number;
 }
 
 export interface TagData {

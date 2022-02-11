@@ -1,0 +1,21 @@
+import { Command } from '@sapphire/framework';
+import type { Message } from 'discord.js';
+import type { Ticket } from '../../structures/Ticket';
+
+export class DeleteTicketCommand extends Command {
+	public constructor(context: Command.Context, options: Command.Options) {
+		super(context, {
+			...options,
+			name: 'delete',
+			description: 'Delete a ticket',
+			preconditions: ['StaffOnly']
+		});
+	}
+
+	public async messageRun(msg: Message) {
+		const ticket: Ticket | undefined = msg.client.tickets.find((t: Ticket) => t.channel?.id === msg.channelId);
+
+		if (!ticket) return msg.reply(`This command can only be used in tickets`);
+		return ticket.delete(msg.member!, 'STAFF_DELETE');
+	}
+}
