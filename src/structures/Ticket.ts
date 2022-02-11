@@ -1,6 +1,6 @@
 import type { SapphireClient } from '@sapphire/framework';
 import { GuildMember, GuildTextBasedChannel, Message, MessageEmbed, ModalSubmitInteraction, User } from 'discord.js';
-import { ticketLogsChannel, transcriptChannel } from '../config.js';
+import { ticketLogsChannel, transcriptChannel, staffRoles, dot } from '../config.js';
 import { transcript } from '../utils/transcript.js';
 
 export class Ticket {
@@ -59,7 +59,24 @@ export class Ticket {
 
 		const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgsArray.reverse());
 
+		const staffs = staff.guild.members.cache
+			.filter((m) => m.roles.cache.some((r) => staffRoles.includes(r.id)))
+			.map((s) => ({
+				mention: s.user.toString(),
+				msgs: msgsArray.filter((m) => m.author.id === s.user.id).length
+			}))
+			.sort((b, a) => a.msgs - b.msgs);
+
+		const em = new MessageEmbed()
+			.setTitle('Ticket transcript')
+			.setColor('BLUE')
+			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL({ dynamic: true }) })
+			.setTimestamp()
+			.setDescription(this.reason)
+			.addField('Staff msgs', staffs.map((s) => `${s.mention} ${dot} \`${s.msgs}\` messages`).join('\n'));
+
 		return await (staff.client.channels.cache.get(transcriptChannel) as GuildTextBasedChannel).send({
+			embeds: [em],
 			files: [{ name: `ticket-${this.ticketNumber}.html`, attachment: Buffer.from(data) }]
 		});
 	}
