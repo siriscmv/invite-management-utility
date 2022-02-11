@@ -31,32 +31,33 @@ export class Ticket {
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL({ dynamic: true }) })
 			.setTitle(reasons[reason] ?? 'Ticket deleted')
 			.setDescription(this.reason)
+			.setColor('RED')
 			.setFooter({ text: staff.user.tag, iconURL: staff.user.displayAvatarURL({ dynamic: true }) })
 			.setTimestamp();
 
 		await (staff.guild.channels.cache.get(ticketLogsChannel)! as GuildTextBasedChannel).send({ embeds: [em] });
 
-		staff.client.tickets.delete(this.ticketNumber);
+		staff.client.tickets.delete(this.user.id);
 		return this.channel!.delete();
 	}
 
 	private async log(staff: GuildMember) {
 		const msgsArray: Message[] = [];
-		let last: string | null = null;
+		let first: string | undefined = undefined;
 		let msgs: Message[] | null = null;
 
 		do {
-			msgs = (await this.channel!.messages.fetch({ after: last ?? '1' })).map((m) => m);
+			msgs = (await this.channel!.messages.fetch({ before: first })).map((m) => m);
 			if (!msgs || msgs.length === 0) break;
 
-			const lastMsgID: string = msgs![msgs!.length - 1]?.id;
-			if (last === lastMsgID) break;
+			const firstMsgId: string = msgs![msgs!.length - 1]?.id;
+			if (first === firstMsgId) break;
 
 			msgsArray.push(...msgs!);
-			last = lastMsgID;
+			first = firstMsgId;
 		} while (true);
 
-		const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgs);
+		const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgsArray.reverse());
 
 		return await (staff.client.channels.cache.get(transcriptChannel) as GuildTextBasedChannel).send({
 			files: [{ name: `ticket-${this.ticketNumber}.html`, attachment: Buffer.from(data) }]

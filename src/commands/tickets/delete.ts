@@ -16,6 +16,7 @@ export class DeleteTicketCommand extends Command {
 		const ticket: Ticket | undefined = msg.client.tickets.find((t: Ticket) => t.channel?.id === msg.channelId);
 
 		if (!ticket) return msg.reply(`This command can only be used in tickets`);
+		msg.channel.send('Deleting ticket ...');
 		return ticket.delete(msg.member!, 'STAFF_DELETE');
 	}
 }

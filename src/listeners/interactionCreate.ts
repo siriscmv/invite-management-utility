@@ -1,8 +1,10 @@
 import { Listener } from '@sapphire/framework';
 import {
 	ButtonInteraction,
+	GuildTextBasedChannel,
 	Interaction,
 	MessageActionRow,
+	MessageEmbed,
 	Modal,
 	ModalSubmitInteraction,
 	OverwriteType,
@@ -11,7 +13,7 @@ import {
 } from 'discord.js';
 import * as config from '../config.js';
 import sleep from '../utils/sleep.js';
-import { Ticket } from './../structures/Ticket';
+import { Ticket } from './../structures/Ticket.js';
 
 export class InteractionCreateListener extends Listener {
 	public async run(interaction: Interaction) {
@@ -39,9 +41,10 @@ export class InteractionCreateListener extends Listener {
 
 	private askReasonForTicket(interaction: ButtonInteraction) {
 		if (interaction.client.tickets.has(interaction.user.id))
-			return interaction.reply(
-				`You have an open ticket already ${interaction.client.tickets.get(interaction.user.id).channel}`
-			);
+			return interaction.reply({
+				content: `You have an open ticket already ${interaction.client.tickets.get(interaction.user.id).channel}`,
+				ephemeral: true
+			});
 
 		const inputRow = new MessageActionRow<TextInputComponent>().setComponents([
 			new TextInputComponent()
@@ -59,7 +62,6 @@ export class InteractionCreateListener extends Listener {
 	}
 
 	private async createTicket(interaction: ModalSubmitInteraction) {
-		await interaction.deferReply();
 		const ticket = new Ticket(interaction.client, interaction);
 
 		ticket.channel = await interaction.guild!.channels.create(`ticket-${ticket.ticketNumber}`, {
@@ -89,16 +91,35 @@ export class InteractionCreateListener extends Listener {
 						'ATTACH_FILES',
 						'MENTION_EVERYONE'
 					] as PermissionResolvable
+				},
+				{
+					id: interaction.guild!.id,
+					type: 'role' as OverwriteType,
+					deny: ['SEND_MESSAGES', 'VIEW_CHANNEL'] as PermissionResolvable
 				}
 			]
 		});
 		interaction.client.tickets.set(ticket.user.id, ticket);
 
-		await ticket.channel.send(
+		ticket.channel.send(
 			`Welcome ${ticket.user}, please ask you question here.\nMake sure to explain in detail so that our staff can help you easily`
 		);
 
-		interaction.editReply(ticket.channel.toString());
+		interaction.reply({
+			content: ticket.channel.toString(),
+			ephemeral: true
+		});
+
+		const em = new MessageEmbed()
+			.setAuthor({ name: ticket.user.tag, iconURL: ticket.user.displayAvatarURL({ dynamic: true }) })
+			.setTitle('Ticket Opened')
+			.setColor('GREEN')
+			.setDescription(ticket.reason)
+			.setTimestamp();
+
+		await (interaction.guild!.channels.cache.get(config.ticketLogsChannel)! as GuildTextBasedChannel).send({
+			embeds: [em]
+		});
 
 		await sleep(90 * 1000);
 		const shoudlClose =

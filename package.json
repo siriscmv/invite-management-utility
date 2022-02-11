@@ -10,8 +10,8 @@
 	"prettier": "@sapphire/prettier-config",
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
-		"start": "node -r dotenv/config ./prod/index.js",
-		"pm2": "pm2 start imu.yml",
+		"start": "npm run build && node -r dotenv/config ./prod/index.js",
+		"pm2": "npm run build && pm2 start imu.yml",
 		"build": "rm -rf prod && mkdir prod && tsc"
 	},
 	"repository": {

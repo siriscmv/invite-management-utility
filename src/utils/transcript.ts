@@ -17,7 +17,7 @@ export const transcript = async (client: SapphireClient, ticketId: number, chann
 </head>
 <body>
 <div class=info>
-    <div class=info__guild-icon-container><img class=info__guild-icon src=https://media.discordapp.net/attachments/696305061852348447/696305121834958848/dribble.gif></div>
+    <div class=info__guild-icon-container><img class=info__guild-icon src=https://cdn.discordapp.com/attachments/874646321880006717/941618141610532924/pfp.png></div>
     <div class=info__metadata>
         <div class=info__guild-name>Ticket Id: ${ticketId}</div>
         <div class=info__channel-name>#${channelName}</div>
