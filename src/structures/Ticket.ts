@@ -107,19 +107,14 @@ export class Ticket {
 	}
 
 	private makeTranscript(channelName: string, author: User, reason: string, messages: Message[]) {
-		return `${channelName}
-		Author・${author.tag} (${author.id})
-		Reason・${reason}
-		Messages・${messages.length}
-		Created・${messages[0].createdAt.toLocaleString('en-IN', { timeZone: 'IST' })}
-		Deleted・${new Date(Date.now()).toLocaleString('en-IN', { timeZone: 'IST' })}
-
-		Messages:
-
-		${messages
+		return `${channelName}\nAuthor・${author.tag} (${author.id})\nReason・${reason}\nMessages・${
+			messages.length
+		}\nCreated・${messages[0].createdAt.toLocaleString('en-IN', { timeZone: 'IST' })}\nDeleted・${new Date(
+			Date.now()
+		).toLocaleString('en-IN', { timeZone: 'IST' })}\n\nMessages:\n\n${messages
 			.map(
 				(m) =>
-					`${m.author.tag} (${m.author.id}) | ${m.createdAt.toLocaleDateString('en-ID', { timeZone: 'IST' })} | ${
+					`${m.author.tag} (${m.author.id}) | ${m.createdAt.toLocaleString('en-ID', { timeZone: 'IST' })} | ${
 						m.content
 					}`
 			)

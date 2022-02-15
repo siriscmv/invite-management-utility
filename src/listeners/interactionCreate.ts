@@ -1,7 +1,6 @@
 import { Listener } from '@sapphire/framework';
 import {
 	ButtonInteraction,
-	GuildMember,
 	GuildTextBasedChannel,
 	Interaction,
 	MessageActionRow,
@@ -58,7 +57,7 @@ export class InteractionCreateListener extends Listener {
 				.setPlaceholder('Enter the reason for making the ticket')
 		]);
 
-		if ((interaction.member as GuildMember).presence?.clientStatus?.['mobile']) return this.createTicket(interaction);
+		//if ((interaction.member as GuildMember).presence?.clientStatus?.['mobile']) return this.createTicket(interaction);
 		const modal = new Modal().setCustomId('CREATE_TICKET').setTitle('Ticket Reason').addComponents(inputRow);
 
 		return interaction.presentModal(modal);
@@ -105,7 +104,7 @@ export class InteractionCreateListener extends Listener {
 		interaction.client.tickets.set(ticket.user.id, ticket);
 
 		ticket.channel.send(
-			`Welcome ${ticket.user}, please ask you question here.\nMake sure to explain in detail so that our <@893483433538510898> staff can help you easily.\nThis ticket will be deleted automatically if you do not respond`
+			`Welcome ${ticket.user}, please ask you question here.\nMake sure to explain in detail so that our <@&893483433538510898> staff can help you easily.\nThis ticket will be deleted automatically if you do not respond`
 		);
 
 		interaction.reply({
