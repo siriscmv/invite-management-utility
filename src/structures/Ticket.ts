@@ -1,5 +1,14 @@
 import type { SapphireClient } from '@sapphire/framework';
-import { GuildMember, GuildTextBasedChannel, Message, MessageEmbed, ModalSubmitInteraction, User } from 'discord.js';
+import {
+	BaseGuildTextChannel,
+	ButtonInteraction,
+	GuildMember,
+	GuildTextBasedChannel,
+	Message,
+	MessageEmbed,
+	ModalSubmitInteraction,
+	User
+} from 'discord.js';
 import { ticketLogsChannel, transcriptChannel, staffRoles, dot } from '../config.js';
 import { transcript } from '../utils/transcript.js';
 
@@ -9,14 +18,26 @@ export class Ticket {
 	channel: GuildTextBasedChannel | null;
 	reason: string;
 
-	constructor(client: SapphireClient, interaction: ModalSubmitInteraction) {
-		const prev = client.db.get('ticketCounter') as number;
-		client.db.set('ticketCounter', prev + 1);
+	constructor(
+		client: SapphireClient,
+		interaction: ModalSubmitInteraction | ButtonInteraction | null,
+		channel?: BaseGuildTextChannel,
+		author?: User
+	) {
+		let prev: number | null;
+		if (interaction) {
+			prev = client.db.get('ticketCounter') as number;
+			client.db.set('ticketCounter', prev + 1);
+		}
 
-		this.ticketNumber = prev + 1;
-		this.user = interaction.user;
-		this.channel = null;
-		this.reason = interaction.components[0].components[0].value;
+		this.ticketNumber = interaction ? prev! + 1 : parseInt(channel?.name?.split('-')[1] ?? '0');
+		this.user = author ?? interaction!.user;
+		this.channel = (channel as GuildTextBasedChannel) ?? null;
+		this.reason = channel
+			? channel.topic ?? 'none'
+			: interaction!.isModalSubmit()
+			? interaction.components[0].components[0].value
+			: 'none';
 	}
 
 	async delete(staff: GuildMember, reason: 'STAFF_DELETE' | 'AUTO_DELETE') {
@@ -46,6 +67,8 @@ export class Ticket {
 		let first: string | undefined = undefined;
 		let msgs: Message[] | null = null;
 
+		staff.client.deleting = true;
+
 		do {
 			msgs = (await this.channel!.messages.fetch({ before: first })).map((m) => m);
 			if (!msgs || msgs.length === 0) break;
@@ -58,6 +81,8 @@ export class Ticket {
 		} while (true);
 
 		const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgsArray.reverse());
+
+		staff.client.deleting = false;
 
 		const staffs = staff.guild.members.cache
 			.filter((m) => m.roles.cache.some((r) => staffRoles.includes(r.id)))

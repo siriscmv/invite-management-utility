@@ -2,6 +2,7 @@ import { Listener } from '@sapphire/framework';
 import {
 	ColorResolvable,
 	DMChannel,
+	GuildMember,
 	Message,
 	MessageActionRow,
 	MessageButton,
@@ -28,11 +29,7 @@ export class MessageCreateListener extends Listener {
 	public async run(msg: Message) {
 		if (msg.author.bot || msg.webhookId || msg.guildId !== config.mainServer) return;
 
-		if (
-			(msg.mentions.members?.size ?? 0) >= 5 &&
-			!msg.member?.permissions.has('MODERATE_MEMBERS') &&
-			!this.isTicket(msg.channel)
-		) {
+		if ((msg.mentions.members?.size ?? 0) >= 5 && !this.isStaff(msg.member!) && !this.isTicket(msg.channel)) {
 			const res = await msg.member?.timeout(1 * 60 * 60 * 1000, 'Mass mentioning members');
 			log('MASS_PING', msg);
 			if (res) {
@@ -69,27 +66,25 @@ export class MessageCreateListener extends Listener {
 			msg.channel.send({ embeds: [embed], components: [comp] });
 		}
 
-		if (this.inviteRegex.test(msg.content) && !this.isTicket(msg.channel)) {
-			if (!msg.member?.permissions.has('MANAGE_MESSAGES')) {
-				await msg.delete();
-				log('INVITE_LINK', msg);
-				const res = await msg.member?.timeout(30 * 1000, 'Sending Invite links');
-				if (res) {
-					const embed: MessageEmbed = new MessageEmbed()
-						.setAuthor({
-							name: msg.author.tag,
-							iconURL: msg.author.displayAvatarURL({ dynamic: true })
-						})
-						.setColor(config.color as ColorResolvable)
-						.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 30s`)
-						.addField('Reason', 'Sending Invite links', true);
+		if (this.inviteRegex.test(msg.content) && !this.isTicket(msg.channel) && !this.isStaff(msg.member!)) {
+			await msg.delete();
+			log('INVITE_LINK', msg);
+			const res = await msg.member?.timeout(30 * 1000, 'Sending Invite links');
+			if (res) {
+				const embed: MessageEmbed = new MessageEmbed()
+					.setAuthor({
+						name: msg.author.tag,
+						iconURL: msg.author.displayAvatarURL({ dynamic: true })
+					})
+					.setColor(config.color as ColorResolvable)
+					.setDescription(`${emotes.timeout} ${msg.author} has been timed out for 30s`)
+					.addField('Reason', 'Sending Invite links', true);
 
-					await msg.channel.send({ embeds: [embed] });
-				}
+				await msg.channel.send({ embeds: [embed] });
 			}
 		}
 
-		if (this.domainRegex.test(msg.content)) {
+		if (this.domainRegex.test(msg.content) && !this.isStaff(msg.member!)) {
 			const trustedDomains = [
 				'discord.gg',
 				'discord.com',
@@ -162,7 +157,8 @@ export class MessageCreateListener extends Listener {
 
 		if (
 			config.blacklistedWords.some((word) => msg.content.toLowerCase().includes(word)) &&
-			!this.isTicket(msg.channel)
+			!this.isTicket(msg.channel) &&
+			!this.isStaff(msg.member!)
 		) {
 			if (!msg.member?.permissions.has('MANAGE_MESSAGES')) {
 				await msg.delete();
@@ -173,7 +169,7 @@ export class MessageCreateListener extends Listener {
 			}
 		}
 
-		if (this.autoDelete.test(msg.content)) msg.delete();
+		if (this.autoDelete.test(msg.content) && !this.isStaff(msg.member!)) msg.delete();
 
 		if (msg.content.startsWith(msg.client.tags.prefix)) {
 			const trigger = msg.content.slice(msg.client.tags.prefix.length);
@@ -202,5 +198,9 @@ export class MessageCreateListener extends Listener {
 
 	private isTicket(channel: DMChannel | PartialDMChannel | TextChannel | ThreadChannel | NewsChannel) {
 		return channel.client.tickets.some((t: Ticket) => t.channel?.id === channel.id);
+	}
+
+	private isStaff(member: GuildMember) {
+		return member.permissions.has('ADMINISTRATOR') || member.roles.cache.some((r) => config.staffRoles.includes(r.id));
 	}
 }

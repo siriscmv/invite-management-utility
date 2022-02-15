@@ -18,6 +18,7 @@ declare module 'discord.js' {
 		classifier: BayesClassifier;
 		webhooks: Collection<'AI_SUPPORT' | 'LOGS', WebhookClient>;
 		tickets: Collection<string, Ticket>;
+		deleting: boolean;
 	}
 }
 

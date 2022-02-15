@@ -25,6 +25,7 @@ client.knowledgeBase = new knowledgeBase(client);
 client.tags = new Tags(client);
 
 client.tickets = new Collection<string, Ticket>();
+client.deleting = false;
 
 client.webhooks = new Collection();
 client.webhooks.set('AI_SUPPORT', new WebhookClient({ url: process.env.AI_SUPPORT! }));
