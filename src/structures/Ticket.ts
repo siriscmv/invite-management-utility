@@ -10,7 +10,6 @@ import {
 	User
 } from 'discord.js';
 import { ticketLogsChannel, transcriptChannel, staffRoles, dot } from '../config.js';
-import { transcript } from '../utils/transcript.js';
 
 export class Ticket {
 	ticketNumber: number;
@@ -80,11 +79,8 @@ export class Ticket {
 			first = firstMsgId;
 		} while (true);
 
-		console.log('...');
-
-		const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgsArray.reverse());
-
-		console.log('......');
+		//const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgsArray.reverse());
+		const data = this.makeTranscript(this.channel!.name, this.user, this.reason, msgsArray.reverse());
 
 		staff.client.deleting = false;
 
@@ -108,5 +104,26 @@ export class Ticket {
 			embeds: [em],
 			files: [{ name: `ticket-${this.ticketNumber}.html`, attachment: Buffer.from(data) }]
 		});
+	}
+
+	private makeTranscript(channelName: string, author: User, reason: string, messages: Message[]) {
+		return `${channelName}
+		Author・${author.tag} (${author.id})
+		Reason・${reason}
+		Messages・${messages.length}
+		Created・${messages[0].createdAt.toLocaleString('en-IN', { timeZone: 'IST' })}
+		Deleted・${new Date(Date.now()).toLocaleString('en-IN', { timeZone: 'IST' })}
+
+		Messages:
+
+		${messages
+			.map(
+				(m) =>
+					`${m.author.tag} (${m.author.id}) | ${m.createdAt.toLocaleDateString('en-ID', { timeZone: 'IST' })} | ${
+						m.content
+					}`
+			)
+			.join('\n')}
+		`;
 	}
 }
