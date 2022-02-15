@@ -80,7 +80,11 @@ export class Ticket {
 			first = firstMsgId;
 		} while (true);
 
+		console.log('...');
+
 		const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgsArray.reverse());
+
+		console.log('......');
 
 		staff.client.deleting = false;
 
