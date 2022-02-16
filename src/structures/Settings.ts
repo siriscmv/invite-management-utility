@@ -1,5 +1,5 @@
 import type { SapphireClient } from '@sapphire/framework';
-import type { ModelStatic } from 'sequelize/dist';
+import type { ModelStatic } from 'sequelize';
 import type { DataInstance, GuildSettings } from '../../typings';
 import { Collection } from 'discord.js';
 import Sequelize from 'sequelize';
