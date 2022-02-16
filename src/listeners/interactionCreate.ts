@@ -36,7 +36,8 @@ export class InteractionCreateListener extends Listener {
 		}
 
 		if (interaction.isButton() && interaction.customId === 'NEW_TICKET') return this.askReasonForTicket(interaction);
-		if (interaction.isModalSubmit() && interaction.customId === 'CREATE_TICKET') return this.createTicket(interaction);
+		if (interaction.isModalSubmission() && interaction.customId === 'CREATE_TICKET')
+			return this.createTicket(interaction);
 	}
 
 	private askReasonForTicket(interaction: ButtonInteraction) {
@@ -60,7 +61,7 @@ export class InteractionCreateListener extends Listener {
 		//if ((interaction.member as GuildMember).presence?.clientStatus?.['mobile']) return this.createTicket(interaction);
 		const modal = new Modal().setCustomId('CREATE_TICKET').setTitle('Ticket Reason').addComponents(inputRow);
 
-		return interaction.presentModal(modal);
+		return interaction.showModal(modal);
 	}
 
 	private async createTicket(interaction: ModalSubmitInteraction | ButtonInteraction) {

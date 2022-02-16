@@ -34,7 +34,7 @@ export class Ticket {
 		this.channel = (channel as GuildTextBasedChannel) ?? null;
 		this.reason = channel
 			? channel.topic ?? 'none'
-			: interaction!.isModalSubmit()
+			: interaction!.isModalSubmission()
 			? interaction.components[0].components[0].value
 			: 'none';
 	}
