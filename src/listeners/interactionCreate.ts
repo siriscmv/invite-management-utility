@@ -50,7 +50,7 @@ export class InteractionCreateListener extends Listener {
 		const inputRow = new MessageActionRow<TextInputComponent>().setComponents([
 			new TextInputComponent()
 				.setMinLength(5)
-				.setMaxLength(100)
+				.setMaxLength(30)
 				.setStyle('SHORT')
 				.setCustomId('TICKET_REASON')
 				.setRequired()
@@ -115,7 +115,7 @@ export class InteractionCreateListener extends Listener {
 
 		const em = new MessageEmbed()
 			.setAuthor({ name: ticket.user.tag, iconURL: ticket.user.displayAvatarURL({ dynamic: true }) })
-			.setTitle('Ticket Opened')
+			.setTitle(`Ticket Opened - ${ticket.ticketNumber}`)
 			.setColor('GREEN')
 			.setDescription(ticket.reason)
 			.setTimestamp();
@@ -124,11 +124,11 @@ export class InteractionCreateListener extends Listener {
 			embeds: [em]
 		});
 
-		await sleep(90 * 1000);
+		await sleep(5 * 60 * 1000);
 		const shoudlClose =
 			(await ticket.channel.messages.fetch()).filter((m) => m.author.id === ticket.user.id).size === 0;
 
 		if (!shoudlClose) return;
-		return ticket.delete(interaction.guild!.me!, 'AUTO_DELETE');
+		return ticket.delete(interaction.guild!.me!);
 	}
 }

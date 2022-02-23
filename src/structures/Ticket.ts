@@ -39,17 +39,12 @@ export class Ticket {
 			: 'none';
 	}
 
-	async delete(staff: GuildMember, reason: 'STAFF_DELETE' | 'AUTO_DELETE') {
+	async delete(staff: GuildMember) {
 		await this.log(staff);
-
-		const reasons = {
-			STAFF_DELETE: 'Ticket deleted by staff',
-			AUTO_DELETE: 'Ticket deleted automatically'
-		};
 
 		const em = new MessageEmbed()
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL({ dynamic: true }) })
-			.setTitle(reasons[reason] ?? 'Ticket deleted')
+			.setTitle(`Ticket ${this.ticketNumber} deleted`)
 			.setDescription(this.reason)
 			.setColor('RED')
 			.setFooter({ text: staff.user.tag, iconURL: staff.user.displayAvatarURL({ dynamic: true }) })
@@ -93,7 +88,7 @@ export class Ticket {
 			.sort((b, a) => a.msgs - b.msgs);
 
 		const em = new MessageEmbed()
-			.setTitle('Ticket transcript')
+			.setTitle(`Ticket transcript - ${this.ticketNumber}`)
 			.setColor('BLUE')
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL({ dynamic: true }) })
 			.setTimestamp()
