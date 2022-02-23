@@ -19,6 +19,6 @@ export class DeleteTicketCommand extends Command {
 
 		if (!ticket) return msg.reply(`This command can only be used in tickets`);
 		msg.channel.send('Deleting ticket ...');
-		return ticket.delete(msg.member!, 'STAFF_DELETE');
+		return ticket.delete(msg.member!);
 	}
 }
