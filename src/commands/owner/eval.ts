@@ -79,6 +79,12 @@ export class EvalCommand extends Command {
 				showHidden: flags.showHidden
 			});
 		}
+		
+		// Clean the output, replace symbols with character code alternatives and hide client's token if there is
+		result = result
+			.replace(/`/g, '`' + String.fromCharCode(8203))
+			.replace(/@/g, '@' + String.fromCharCode(8203))
+			.replaceAll(ctx.client.token, '[REDACTED]');
 
 		return { result, success, type };
 	}
