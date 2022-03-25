@@ -84,7 +84,7 @@ export class EvalCommand extends Command {
 		result = result
 			.replace(/`/g, '`' + String.fromCharCode(8203))
 			.replace(/@/g, '@' + String.fromCharCode(8203))
-			.replaceAll(ctx.client.token, '[REDACTED]');
+			.replace(new RegExp(ctx.client.token ? String(ctx.client.token) : '[REDACTED]', 'gi'), '[REDACTED]'); /* Prevent Typescript warning */
 
 		return { result, success, type };
 	}
