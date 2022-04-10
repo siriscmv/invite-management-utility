@@ -5,7 +5,7 @@ import { mainBot, mainServer, verifiedRole } from '../config.js';
 export class GuildMemberAddListener extends Listener {
 	public async run(member: GuildMember) {
 		if (member.guild.id !== mainServer) return;
-		const bot = member.guild.members.cache.get(mainBot);
+		const bot = member.guild.members.cache.get(mainBot)!;
 		if (!bot.presence || bot.presence.status === 'offline') member.roles.add(verifiedRole);
 		/*
 		if (((member.client.db?.get('autoKickBypass') ?? []) as string[]).includes(member.id)) return;
