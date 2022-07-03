@@ -43,7 +43,7 @@
 		"@types/sequelize": "^4.28.11",
 		"@types/util.promisify": "^1.0.4",
 		"compromise": "^13.11.4",
-		"discord.js": "github:discordjs/discord.js#pull/7431/head",
+		"discord.js": "^13.8.1",
 		"dotenv": "^10.0.0",
 		"natural": "^5.1.13",
 		"node-fetch": "^3.2.0",

@@ -11,6 +11,7 @@ import {
 	PartialDMChannel,
 	TextChannel,
 	ThreadChannel,
+	VoiceBasedChannel,
 	WebhookClient
 } from 'discord.js';
 import log from '../utils/log.js';
@@ -196,7 +197,9 @@ export class MessageCreateListener extends Listener {
 		}
 	}
 
-	private isTicket(channel: DMChannel | PartialDMChannel | TextChannel | ThreadChannel | NewsChannel) {
+	private isTicket(
+		channel: DMChannel | PartialDMChannel | TextChannel | ThreadChannel | NewsChannel | VoiceBasedChannel
+	) {
 		return channel.client.tickets.some((t: Ticket) => t.channel?.id === channel.id);
 	}
 
