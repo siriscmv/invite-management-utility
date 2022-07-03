@@ -89,10 +89,8 @@ export class InteractionCreateListener extends Listener {
 					allow: [
 						'SEND_MESSAGES',
 						'VIEW_CHANNEL',
-						'ADD_REACTIONS',
 						'EMBED_LINKS',
-						'ATTACH_FILES',
-						'MENTION_EVERYONE'
+						'ATTACH_FILES'
 					] as PermissionResolvable
 				},
 				{
