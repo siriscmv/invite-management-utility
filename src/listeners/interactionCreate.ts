@@ -36,8 +36,7 @@ export class InteractionCreateListener extends Listener {
 		}
 
 		if (interaction.isButton() && interaction.customId === 'NEW_TICKET') return this.askReasonForTicket(interaction);
-		if (interaction.isModalSubmission() && interaction.customId === 'CREATE_TICKET')
-			return this.createTicket(interaction);
+		if (interaction.isModalSubmit() && interaction.customId === 'CREATE_TICKET') return this.createTicket(interaction);
 	}
 
 	private askReasonForTicket(interaction: ButtonInteraction) {
@@ -86,14 +85,7 @@ export class InteractionCreateListener extends Listener {
 				{
 					id: ticket.user.id,
 					type: 'member' as OverwriteType,
-					allow: [
-						'SEND_MESSAGES',
-						'VIEW_CHANNEL',
-						'ADD_REACTIONS',
-						'EMBED_LINKS',
-						'ATTACH_FILES',
-						'MENTION_EVERYONE'
-					] as PermissionResolvable
+					allow: ['SEND_MESSAGES', 'VIEW_CHANNEL', 'EMBED_LINKS', 'ATTACH_FILES'] as PermissionResolvable
 				},
 				{
 					id: interaction.guild!.id,
