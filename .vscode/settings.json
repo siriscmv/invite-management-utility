@@ -1,4 +1,5 @@
 {
 	"deepscan.ignoreConfirmWarning": true,
-	"eslint.enable": false
+	"eslint.enable": false,
+	"editor.defaultFormatter": "esbenp.prettier-vscode"
 }
