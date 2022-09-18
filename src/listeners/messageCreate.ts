@@ -26,8 +26,8 @@ export class MessageCreateListener extends Listener {
 	domainRegex = /(?:[a-z0-9](?:[a-z0-9-]{0,61}[a-z0-9])?\.)+[a-z0-9][a-z0-9-]{0,61}[a-z0-9]/gi;
 	autoDelete = /[\u0900-\u097F]/gm;
 
-	//@ts-expect-error
-	public async run(msg: Message) {
+	//@ts-ignore
+	public async run(msg: Message): Promise<undefined> {
 		if (msg.author.bot || msg.webhookId || msg.guildId !== config.mainServer) return;
 
 		if ((msg.mentions.members?.size ?? 0) >= 5 && !this.isStaff(msg.member!) && !this.isTicket(msg.channel)) {
@@ -180,7 +180,10 @@ export class MessageCreateListener extends Listener {
 
 		if (msg.channelId === config.automatedSupport) {
 			const res = msg.client.classifier.getClassifications(msg.content);
-			if (res[0].value <= 0.5) return msg.react('<:BlobCatThink:916972425965604875>');
+			if (res[0].value <= 0.5) {
+				await msg.react('<:BlobCatThink:916972425965604875>');
+				return;
+			}
 
 			const button = new MessageButton()
 				.setStyle('PRIMARY')
@@ -190,7 +193,7 @@ export class MessageCreateListener extends Listener {
 
 			const comp = new MessageActionRow().setComponents([button]);
 
-			return (msg.client.webhooks.get('AI_SUPPORT') as WebhookClient).send({
+			await (msg.client.webhooks.get('AI_SUPPORT') as WebhookClient).send({
 				content: res[0].label,
 				components: [comp]
 			});
