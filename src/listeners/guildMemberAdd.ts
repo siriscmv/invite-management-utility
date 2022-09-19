@@ -2,10 +2,11 @@ import { Listener } from '@sapphire/framework';
 import type { GuildMember } from 'discord.js';
 import { mainBot, mainServer, verifiedRole } from '../config.js';
 import removeAccents from 'remove-accents'; //@ts-ignore
-import { nfkc } from 'unorm'; //@ts-ignore
+import unorm from 'unorm'; //@ts-ignore
 import latinize from 'latinize'; //@ts-ignore
 import unidecode from 'unidecode';
 
+const { nfkc } = unorm;
 export class GuildMemberAddListener extends Listener {
 	public async run(member: GuildMember) {
 		if (member.guild.id !== mainServer) return;
