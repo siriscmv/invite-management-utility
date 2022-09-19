@@ -29,12 +29,14 @@ export class GuildMemberAddListener extends Listener {
 		*/
 
 		const deCancer = this.decancer(member.displayName);
-		if (deCancer) await member.setNickname(deCancer);
-		else return;
-
-		const deHoist = this.dehoist(member.displayName);
-		if (deHoist) await member.setNickname(deHoist);
-		else return;
+		if (deCancer) {
+			const m = await member.setNickname(deCancer);
+			const deHoist = this.dehoist(m.displayName);
+			if (deHoist) await m.setNickname(deHoist);
+		} else {
+			const deHoist = this.dehoist(member.displayName);
+			if (deHoist) await member.setNickname(deHoist);
+		}
 	}
 
 	private decancer(name: string) {
