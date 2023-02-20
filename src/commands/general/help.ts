@@ -16,7 +16,7 @@ export class HelpCommand extends Command {
 
 		if (command) {
 			const embed = new MessageEmbed()
-				.setColor(config.color as ColorResolvable)
+				.setColor(config.color)
 				.setTitle(`${this.capitalise(command.name)} Command`)
 				.setAuthor({
 					name: msg.client.user!.tag,
@@ -47,7 +47,7 @@ export class HelpCommand extends Command {
 				name: msg.client.user!.tag,
 				iconURL: msg.client.user!.displayAvatarURL()
 			})
-			.setColor(config.color as ColorResolvable)
+			.setColor(config.color)
 			.addFields(
 				categories.map((cat) => {
 					return {

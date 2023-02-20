@@ -1,40 +1,33 @@
-import type { SapphireClient } from '@sapphire/framework';
 import {
-	BaseGuildTextChannel,
 	ButtonInteraction,
 	GuildMember,
-	GuildTextBasedChannel,
 	Message,
-	MessageEmbed,
+	EmbedBuilder,
 	ModalSubmitInteraction,
-	User
+	User,
+	TextChannel
 } from 'discord.js';
-import { ticketLogsChannel, transcriptChannel, staffRoles, dot, red } from '../config.js';
+import { ticketLogsChannel, transcriptChannel, staffRoles, red, color } from '../config.js';
 
 export class Ticket {
 	ticketNumber: number;
 	user: User;
-	channel: GuildTextBasedChannel | null;
+	channel: TextChannel | null;
 	reason: string;
 
-	constructor(
-		client: SapphireClient,
-		interaction: ModalSubmitInteraction | ButtonInteraction | null,
-		channel?: BaseGuildTextChannel,
-		author?: User
-	) {
+	constructor(interaction: ModalSubmitInteraction | ButtonInteraction | null, channel?: TextChannel, author?: User) {
 		let prev: number | null;
 		if (interaction) {
-			prev = client.db.get('ticketCounter') as number;
-			client.db.set('ticketCounter', prev + 1);
+			prev = db.get('ticketCounter') as number;
+			db.set('ticketCounter', prev + 1);
 		}
 
 		this.ticketNumber = interaction ? prev! + 1 : parseInt(channel?.name?.split('-')[1] ?? '0');
 		this.user = author ?? interaction!.user;
-		this.channel = (channel as GuildTextBasedChannel) ?? null;
+		this.channel = (channel as TextChannel) ?? null;
 		this.reason = channel
 			? channel.topic ?? 'none'
-			: interaction!.isModalSubmit()
+			: interaction!.isModalSubmit() //TODO: fix?
 			? interaction.components[0].components[0].value
 			: 'none';
 	}
@@ -42,15 +35,15 @@ export class Ticket {
 	async delete(staff: GuildMember) {
 		await this.log(staff);
 
-		const em = new MessageEmbed()
-			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL({ dynamic: true }) })
+		const em = new EmbedBuilder()
+			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
 			.setTitle(`Ticket ${this.ticketNumber} deleted`)
-			.setDescription(this.reason)
+			.setDescription(`・${this.reason}\n・Closed by ${staff.user.tag}`)
 			.setColor(red)
-			.setFooter({ text: staff.user.tag, iconURL: staff.user.displayAvatarURL({ dynamic: true }) })
+			.setFooter({ text: this.user.id })
 			.setTimestamp();
 
-		await (staff.guild.channels.cache.get(ticketLogsChannel)! as GuildTextBasedChannel).send({ embeds: [em] });
+		await (staff.guild.channels.cache.get(ticketLogsChannel)! as TextChannel).send({ embeds: [em] });
 
 		staff.client.tickets.delete(this.user.id);
 		return this.channel!.delete();
@@ -74,7 +67,6 @@ export class Ticket {
 			first = firstMsgId;
 		} while (true);
 
-		//const data = await transcript(staff.client, this.ticketNumber, this.channel!.name, msgsArray.reverse());
 		const data = this.makeTranscript(this.channel!.name, this.user, this.reason, msgsArray.reverse());
 
 		staff.client.deleting = false;
@@ -87,15 +79,19 @@ export class Ticket {
 			}))
 			.sort((b, a) => a.msgs - b.msgs);
 
-		const em = new MessageEmbed()
-			.setTitle(`Ticket transcript - ${this.ticketNumber}`)
-			.setColor('BLUE')
-			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL({ dynamic: true }) })
+		const em = new EmbedBuilder()
+			.setTitle(`Ticket Transcript - ${this.ticketNumber}`)
+			.setColor(color)
+			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
+			.setFooter({ text: this.user.id })
 			.setTimestamp()
 			.setDescription(this.reason)
-			.addField('Staff msgs', staffs.map((s) => `${s.mention} ${dot} \`${s.msgs}\` messages`).join('\n'));
+			.addFields({
+				name: 'Staff msgs',
+				value: staffs.map((s) => `${s.mention} ・\`${s.msgs}\` messages`).join('\n')
+			});
 
-		return await (staff.client.channels.cache.get(transcriptChannel) as GuildTextBasedChannel).send({
+		return await (staff.client.channels.cache.get(transcriptChannel) as TextChannel).send({
 			embeds: [em],
 			files: [{ name: `ticket-${this.ticketNumber}.html`, attachment: Buffer.from(data) }]
 		});

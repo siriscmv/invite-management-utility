@@ -2,8 +2,8 @@ export const owners = ['581451736305106985'];
 export const mainServer = '874644312200212500';
 export const verifiedRole = '903185636482240582';
 export const logs = '916727940732055582';
-export const color = '89B4FA';
-export const dot = '・';
+export const color = '#89B4FA';
+
 export const boostLogs = '933986347117576292';
 export const voterRole = '887693588375408701';
 export const prefixes = ['$'];

@@ -2,13 +2,19 @@ import {
 	ButtonInteraction,
 	GuildTextBasedChannel,
 	Interaction,
-	MessageActionRow,
-	MessageEmbed,
-	Modal,
+	ActionRowBuilder,
+	EmbedBuilder,
+	ModalComponentBuilder,
 	ModalSubmitInteraction,
 	OverwriteType,
 	PermissionResolvable,
-	TextInputComponent
+	TextInputComponent,
+	TextInputBuilder,
+	TextInputStyle,
+	ModalBuilder,
+	TextChannel,
+	ChannelType,
+	PermissionFlagsBits
 } from 'discord.js';
 import * as config from '../config.js';
 import sleep from '../utils/sleep.js';
@@ -44,48 +50,59 @@ const askReasonForTicket = (interaction: ButtonInteraction) => {
 			ephemeral: true
 		});
 
-	const inputRow = new MessageActionRow<TextInputComponent>().setComponents([
-		new TextInputComponent()
+	const inputRow = new ActionRowBuilder<TextInputBuilder>().setComponents([
+		new TextInputBuilder()
 			.setMinLength(5)
 			.setMaxLength(30)
-			.setStyle('SHORT')
+			.setStyle(TextInputStyle.Short)
 			.setCustomId('TICKET_REASON')
 			.setRequired()
 			.setLabel('Reason')
 			.setPlaceholder('Enter the reason for making the ticket')
 	]);
 
-	//if ((interaction.member as GuildMember).presence?.clientStatus?.['mobile']) return this.createTicket(interaction);
-	const modal = new Modal().setCustomId('CREATE_TICKET').setTitle('Ticket Reason').addComponents(inputRow);
+	const modal = new ModalBuilder().setCustomId('CREATE_TICKET').setTitle('Ticket Reason').addComponents(inputRow);
 
 	return interaction.showModal(modal);
 };
 
 const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteraction) => {
-	const ticket = new Ticket(interaction.client, interaction);
+	const ticket = new Ticket(interaction);
 
-	ticket.channel = await interaction.guild!.channels.create(`ticket-${ticket.ticketNumber}`, {
+	ticket.channel = (await interaction.guild!.channels.create({
+		name: `ticket-${ticket.ticketNumber}`,
 		parent: config.ticketCategory,
-		type: 'GUILD_TEXT',
+		type: ChannelType.GuildText,
 		topic: ticket.reason,
 		permissionOverwrites: [
 			...config.staffRoles.map((staff) => ({
 				id: staff,
-				type: 'role' as OverwriteType,
-				allow: ['SEND_MESSAGES', 'VIEW_CHANNEL', 'ADD_REACTIONS', 'EMBED_LINKS', 'ATTACH_FILES'] as PermissionResolvable
+				type: OverwriteType.Role,
+				allow: [
+					PermissionFlagsBits.SendMessages,
+					PermissionFlagsBits.ViewChannel,
+					PermissionFlagsBits.AddReactions,
+					PermissionFlagsBits.EmbedLinks,
+					PermissionFlagsBits.AttachFiles
+				]
 			})),
 			{
 				id: ticket.user.id,
-				type: 'member' as OverwriteType,
-				allow: ['SEND_MESSAGES', 'VIEW_CHANNEL', 'EMBED_LINKS', 'ATTACH_FILES'] as PermissionResolvable
+				type: OverwriteType.Member,
+				allow: [
+					PermissionFlagsBits.SendMessages,
+					PermissionFlagsBits.ViewChannel,
+					PermissionFlagsBits.EmbedLinks,
+					PermissionFlagsBits.AttachFiles
+				]
 			},
 			{
 				id: interaction.guild!.id,
-				type: 'role' as OverwriteType,
-				deny: ['SEND_MESSAGES', 'VIEW_CHANNEL'] as PermissionResolvable
+				type: OverwriteType.Role,
+				deny: [PermissionFlagsBits.SendMessages, PermissionFlagsBits.ViewChannel]
 			}
 		]
-	});
+	})) as TextChannel;
 	interaction.client.tickets.set(ticket.user.id, ticket);
 
 	ticket.channel.send(
@@ -97,14 +114,14 @@ const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteract
 		ephemeral: true
 	});
 
-	const em = new MessageEmbed()
-		.setAuthor({ name: ticket.user.tag, iconURL: ticket.user.displayAvatarURL({ dynamic: true }) })
+	const em = new EmbedBuilder()
+		.setAuthor({ name: ticket.user.tag, iconURL: ticket.user.displayAvatarURL() })
 		.setTitle(`Ticket Opened - ${ticket.ticketNumber}`)
 		.setColor(config.green)
 		.setDescription(ticket.reason)
 		.setTimestamp();
 
-	await (interaction.guild!.channels.cache.get(config.ticketLogsChannel)! as GuildTextBasedChannel).send({
+	await (interaction.guild!.channels.cache.get(config.ticketLogsChannel)! as TextChannel).send({
 		embeds: [em]
 	});
 
@@ -112,5 +129,5 @@ const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteract
 	const shoudlClose = (await ticket.channel.messages.fetch()).filter((m) => m.author.id === ticket.user.id).size === 0;
 
 	if (!shoudlClose) return;
-	return ticket.delete(interaction.guild!.me!);
+	return ticket.delete(interaction.guild!.members.me!);
 };

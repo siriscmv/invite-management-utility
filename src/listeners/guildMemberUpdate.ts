@@ -1,11 +1,11 @@
-import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
+import { GuildMember, EmbedBuilder, TextChannel } from 'discord.js';
 import { mainServer, boostLogs, green, red } from '../config.js';
 
 export default async function run(oldMember: GuildMember, newMember: GuildMember) {
 	if (oldMember.guild.id !== mainServer) return;
 
-	const baseEmbed = new MessageEmbed()
-		.setAuthor({ name: newMember.user.tag, iconURL: newMember.user.displayAvatarURL({ dynamic: true }) })
+	const baseEmbed = new EmbedBuilder()
+		.setAuthor({ name: newMember.user.tag, iconURL: newMember.user.displayAvatarURL() })
 		.setFooter({ text: newMember.id });
 
 	const boostLog = newMember.client.channels.cache.get(boostLogs) as TextChannel;

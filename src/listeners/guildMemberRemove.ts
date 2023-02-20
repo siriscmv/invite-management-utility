@@ -1,4 +1,4 @@
-import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
+import { GuildMember, EmbedBuilder, TextChannel } from 'discord.js';
 import { mainServer, boostLogs, boosterRole, logChannel, red } from '../config.js';
 
 export default function run(member: GuildMember) {
@@ -7,8 +7,8 @@ export default function run(member: GuildMember) {
 	const boostLog = client.channels.cache.get(boostLogs) as TextChannel;
 	const log = client.channels.cache.get(logChannel) as TextChannel;
 
-	const baseEmbed = new MessageEmbed()
-		.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+	const baseEmbed = new EmbedBuilder()
+		.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
 		.setFooter({ text: member.id });
 
 	log.send({

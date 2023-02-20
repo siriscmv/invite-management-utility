@@ -1,4 +1,4 @@
-import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
+import { GuildMember, EmbedBuilder, TextChannel } from 'discord.js';
 import { green, logChannel, mainServer, verifiedRole } from '../config.js';
 import removeAccents from 'remove-accents'; //@ts-ignore
 import unorm from 'unorm'; //@ts-ignore
@@ -15,8 +15,8 @@ export default async function run(member: GuildMember) {
 	const log = member.client.channels.cache.get(logChannel)! as TextChannel;
 	log.send({
 		embeds: [
-			new MessageEmbed()
-				.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL({ dynamic: true }) })
+			new EmbedBuilder()
+				.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
 				.setFooter({ text: member.id })
 				.setTitle('Member Joined')
 				.setColor(green)

@@ -1,4 +1,4 @@
-import type { BaseGuildTextChannel, Client, TextChannel } from 'discord.js';
+import { Client, OverwriteType, PermissionFlagsBits, TextChannel } from 'discord.js';
 import { mainServer, rolesMenu } from '../config.js';
 import { Ticket } from '../utils/Ticket.js';
 
@@ -12,13 +12,17 @@ export async function run(client: Client) {
 
 	const server = client.guilds.cache.get(mainServer)!;
 	const tickets = server.channels.cache
-		.filter((c) => c.parentId === '874647974075060305' && !c.permissionsFor('903185636482240582')?.has('VIEW_CHANNEL'))
-		.map((c) => c as BaseGuildTextChannel);
+		.filter(
+			(c) =>
+				c.parentId === '874647974075060305' &&
+				!c.permissionsFor('903185636482240582')?.has(PermissionFlagsBits.ViewChannel)
+		)
+		.map((c) => c as TextChannel);
 
 	for (const ticket of tickets) {
-		const ticketAuthor = ticket.permissionOverwrites.cache.find((p) => p.type === 'member')?.id;
+		const ticketAuthor = ticket.permissionOverwrites.cache.find((p) => p.type === OverwriteType.Member)?.id;
 		if (!ticketAuthor) continue;
-		const t = new Ticket(client, null, ticket, await client.users.fetch(ticketAuthor));
+		const t = new Ticket(null, ticket, await client.users.fetch(ticketAuthor));
 		client.tickets.set(ticketAuthor, t);
 	}
 }
