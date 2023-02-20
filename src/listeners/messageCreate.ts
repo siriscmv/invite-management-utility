@@ -1,11 +1,11 @@
-import { Message, MessageActionRow, MessageButton, MessageEmbed, TextChannel, WebhookClient } from 'discord.js';
+import { Message, MessageActionRow, MessageButton, MessageEmbed, TextChannel } from 'discord.js';
 import { emotes } from '../utils/emotes.js';
 import * as config from '../config.js';
 
 export async function run(msg: Message): Promise<undefined> {
 	if (msg.author.bot || msg.webhookId || msg.guildId !== config.mainServer) return;
 
-	if (msg.channelId === config.boostChannel && !msg.author.bot) {
+	if (msg.channelId === config.boostChannel) {
 		const msgs = await msg.channel.messages.fetch();
 		(msg.channel as TextChannel).bulkDelete(msgs.filter((m) => m.author.id === msg.client.user!.id));
 		if (msg.system) {
