@@ -20,3 +20,12 @@ export const automatedSupport = '936160501614936114';
 export const transcriptChannel = '887297077456023593';
 export const ticketLogsChannel = '887297029938765844';
 export const ticketCategory = '874647974075060305';
+export const logChannel = '887297621251747860';
+
+export const red = '#f38ba8';
+export const green = '#a6e3a1';
+
+export const rolesMenu = {
+	channel: '887300013103906866',
+	message: '887303934232920064'
+};

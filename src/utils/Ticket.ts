@@ -9,7 +9,7 @@ import {
 	ModalSubmitInteraction,
 	User
 } from 'discord.js';
-import { ticketLogsChannel, transcriptChannel, staffRoles, dot } from '../config.js';
+import { ticketLogsChannel, transcriptChannel, staffRoles, dot, red } from '../config.js';
 
 export class Ticket {
 	ticketNumber: number;
@@ -46,7 +46,7 @@ export class Ticket {
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL({ dynamic: true }) })
 			.setTitle(`Ticket ${this.ticketNumber} deleted`)
 			.setDescription(this.reason)
-			.setColor('RED')
+			.setColor(red)
 			.setFooter({ text: staff.user.tag, iconURL: staff.user.displayAvatarURL({ dynamic: true }) })
 			.setTimestamp();
 

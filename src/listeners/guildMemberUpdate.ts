@@ -1,36 +1,36 @@
-import { Listener } from '@sapphire/framework';
 import { GuildMember, MessageEmbed, TextChannel } from 'discord.js';
-import { mainServer, boostLogs } from '../config.js';
+import { mainServer, boostLogs, green, red } from '../config.js';
 
-export class GuildMemberUpdateListener extends Listener {
-	public async run(oldMember: GuildMember, newMember: GuildMember) {
-		if (oldMember.guild.id !== mainServer) return;
-		const { client } = newMember;
-		const log = client.channels.cache.get(boostLogs) as TextChannel;
-		const baseEmbed = new MessageEmbed()
-			.setAuthor({ name: newMember.user.tag, iconURL: newMember.user.displayAvatarURL({ dynamic: true }) })
-			.setFooter({ text: newMember.id });
+export default async function run(oldMember: GuildMember, newMember: GuildMember) {
+	if (oldMember.guild.id !== mainServer) return;
 
-		if (oldMember.premiumSinceTimestamp && !newMember.premiumSinceTimestamp) {
-			//unboost
-			log.send({
-				embeds: [
-					baseEmbed
-						.setColor('RED')
-						.setDescription(
-							`${newMember} unboosted :/\nThey started boosting <t:${Math.round(
-								oldMember.premiumSinceTimestamp / 1000
-							)}:R>`
-						)
-				]
-			});
-		} else if (!oldMember.premiumSinceTimestamp && newMember.premiumSinceTimestamp) {
-			//boost
-			log.send({
-				embeds: [
-					baseEmbed.setColor('GREEN').setDescription(`${newMember} just boosted <t:${Math.round(Date.now() / 1000)}:R>`)
-				]
-			});
-		}
+	const baseEmbed = new MessageEmbed()
+		.setAuthor({ name: newMember.user.tag, iconURL: newMember.user.displayAvatarURL({ dynamic: true }) })
+		.setFooter({ text: newMember.id });
+
+	const boostLog = newMember.client.channels.cache.get(boostLogs) as TextChannel;
+
+	if (oldMember.premiumSinceTimestamp && !newMember.premiumSinceTimestamp) {
+		//unboost
+		boostLog.send({
+			embeds: [
+				baseEmbed
+					.setColor(red)
+					.setTitle('Member Unboosted')
+					.setDescription(
+						`・${newMember}/\n・Started boosting <t:${Math.round(oldMember.premiumSinceTimestamp / 1000)}:R>`
+					)
+			]
+		});
+	} else if (!oldMember.premiumSinceTimestamp && newMember.premiumSinceTimestamp) {
+		//boost
+		boostLog.send({
+			embeds: [
+				baseEmbed
+					.setColor(green)
+					.setTitle('Member Boosted')
+					.setDescription(`・${newMember}\n・Started boosting <t:${Math.round(Date.now() / 1000)}:R>`)
+			]
+		});
 	}
 }

@@ -1,6 +1,6 @@
 import { Command } from '@sapphire/framework';
 import type { Message } from 'discord.js';
-import type { Ticket } from '../../structures/Ticket';
+import type { Ticket } from '../../utils/Ticket';
 
 export class DeleteTicketCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {

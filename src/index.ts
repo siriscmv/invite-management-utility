@@ -1,11 +1,9 @@
-import { SapphireClient } from '@sapphire/framework';
-import '@sapphire/plugin-logger/register';
 import * as sq from 'sequelize';
 import { Settings } from './structures/Settings.js';
 import { Collection, WebhookClient } from 'discord.js';
 import { knowledgeBase } from './structures/KnowledgeBase.js';
 import { Tags } from './structures/Tags.js';
-import type { Ticket } from './structures/Ticket.js';
+import type { Ticket } from './utils/Ticket.js';
 
 const client = new SapphireClient({
 	intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_PRESENCES'],
