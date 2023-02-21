@@ -1,31 +1,44 @@
-import * as sq from 'sequelize';
-import { Settings } from './structures/Settings.js';
-import { Collection, WebhookClient } from 'discord.js';
-import { knowledgeBase } from './structures/KnowledgeBase.js';
-import { Tags } from './structures/Tags.js';
-import type { Ticket } from './utils/Ticket.js';
+import { Client, IntentsBitField, Partials, Options } from 'discord.js';
+import { mainBot } from './config';
 
-const client = new SapphireClient({
-	intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_PRESENCES'],
-	failIfNotExists: false,
-	defaultPrefix: ['$']
+const client = new Client({
+	intents: [
+		IntentsBitField.Flags.Guilds,
+		IntentsBitField.Flags.GuildMessages,
+		IntentsBitField.Flags.GuildMessageReactions,
+		IntentsBitField.Flags.GuildMembers,
+		IntentsBitField.Flags.GuildPresences,
+		IntentsBitField.Flags.MessageContent
+	],
+	partials: [Partials.GuildMember, Partials.Message, Partials.User, Partials.Reaction],
+	presence: {
+		status: 'online'
+	},
+	makeCache: Options.cacheWithLimits({
+		AutoModerationRuleManager: 0,
+		ApplicationCommandManager: 0,
+		BaseGuildEmojiManager: 0,
+		GuildEmojiManager: 0,
+		GuildMemberManager: undefined,
+		GuildBanManager: 0,
+		GuildForumThreadManager: 0,
+		GuildInviteManager: 0,
+		GuildScheduledEventManager: 0,
+		GuildStickerManager: 0,
+		GuildTextThreadManager: 0,
+		MessageManager: 0,
+		PresenceManager: {
+			maxSize: 1,
+			keepOverLimit: (presence) => presence.userId === mainBot
+		},
+		ReactionManager: 0,
+		ReactionUserManager: 0,
+		StageInstanceManager: 0,
+		ThreadManager: 0,
+		ThreadMemberManager: 0,
+		UserManager: undefined,
+		VoiceStateManager: 0
+	})
 });
-
-const sequelize = new sq.Sequelize({
-	dialect: 'sqlite',
-	storage: 'database.sqlite',
-	logging: false
-});
-
-client.sequelize = sequelize;
-client.db = new Settings(client);
-client.knowledgeBase = new knowledgeBase(client);
-client.tags = new Tags(client);
-
-client.tickets = new Collection<string, Ticket>();
-client.deleting = false;
-
-client.webhooks = new Collection();
-client.webhooks.set('AI_SUPPORT', new WebhookClient({ url: process.env.AI_SUPPORT! }));
 
 client.login(process.env.DISCORD_TOKEN!);

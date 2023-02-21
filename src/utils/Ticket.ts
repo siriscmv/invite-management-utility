@@ -5,11 +5,12 @@ import {
 	EmbedBuilder,
 	ModalSubmitInteraction,
 	User,
-	TextChannel
+	TextChannel,
+	Collection
 } from 'discord.js';
 import { ticketLogsChannel, transcriptChannel, staffRoles, red, color } from '../config.js';
 
-export class Ticket {
+export default class Ticket {
 	ticketNumber: number;
 	user: User;
 	channel: TextChannel | null;
@@ -113,3 +114,6 @@ export class Ticket {
 		`;
 	}
 }
+
+export const tickets = new Collection<string, Ticket>();
+export const deleting = false;
