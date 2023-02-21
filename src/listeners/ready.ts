@@ -1,6 +1,6 @@
 import { Client, OverwriteType, PermissionFlagsBits, TextChannel } from 'discord.js';
 import { mainServer, rolesMenu } from '../config.js';
-import { Ticket } from '../utils/Ticket.js';
+import Ticket from '../utils/Ticket.js';
 
 export async function run(client: Client) {
 	const { tag, id } = client.user!;
