@@ -39,14 +39,14 @@ export default class Ticket {
 		const em = new EmbedBuilder()
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
 			.setTitle(`Ticket ${this.ticketNumber} deleted`)
-			.setDescription(`・${this.reason}\n・Closed by ${staff.user.tag}`)
+			.setDescription(`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${staff.user.tag}\``)
 			.setColor(red)
 			.setFooter({ text: this.user.id })
 			.setTimestamp();
 
 		await (staff.guild.channels.cache.get(ticketLogsChannel)! as TextChannel).send({ embeds: [em] });
 
-		staff.client.tickets.delete(this.user.id);
+		tickets.delete(this.user.id);
 		return this.channel!.delete();
 	}
 
@@ -55,7 +55,7 @@ export default class Ticket {
 		let first: string | undefined = undefined;
 		let msgs: Message[] | null = null;
 
-		staff.client.deleting = true;
+		deleting = true;
 
 		do {
 			msgs = (await this.channel!.messages.fetch({ before: first })).map((m) => m);
@@ -70,15 +70,7 @@ export default class Ticket {
 
 		const data = this.makeTranscript(this.channel!.name, this.user, this.reason, msgsArray.reverse());
 
-		staff.client.deleting = false;
-
-		const staffs = staff.guild.members.cache
-			.filter((m) => m.roles.cache.some((r) => staffRoles.includes(r.id)))
-			.map((s) => ({
-				mention: s.user.toString(),
-				msgs: msgsArray.filter((m) => m.author.id === s.user.id).length
-			}))
-			.sort((b, a) => a.msgs - b.msgs);
+		deleting = false;
 
 		const em = new EmbedBuilder()
 			.setTitle(`Ticket Transcript - ${this.ticketNumber}`)
@@ -86,11 +78,7 @@ export default class Ticket {
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
 			.setFooter({ text: this.user.id })
 			.setTimestamp()
-			.setDescription(this.reason)
-			.addFields({
-				name: 'Staff msgs',
-				value: staffs.map((s) => `${s.mention} ・\`${s.msgs}\` messages`).join('\n')
-			});
+			.setDescription(`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${staff.user.tag}\``);
 
 		return await (staff.client.channels.cache.get(transcriptChannel) as TextChannel).send({
 			embeds: [em],
@@ -116,4 +104,5 @@ export default class Ticket {
 }
 
 export const tickets = new Collection<string, Ticket>();
-export const deleting = false;
+let deleting = false;
+export const isDeleting = () => deleting;
