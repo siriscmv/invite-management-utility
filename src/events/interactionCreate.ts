@@ -14,7 +14,7 @@ import {
 } from 'discord.js';
 import * as config from '../config.js';
 import sleep from '../utils/sleep.js';
-import Ticket from '../utils/Ticket.js';
+import Ticket, { tickets } from '../utils/Ticket.js';
 
 export default async function run(interaction: Interaction) {
 	if (interaction.guildId !== config.mainServer) return;
@@ -40,9 +40,9 @@ export default async function run(interaction: Interaction) {
 }
 
 const askReasonForTicket = (interaction: ButtonInteraction) => {
-	if (interaction.client.tickets.has(interaction.user.id))
+	if (tickets.has(interaction.user.id))
 		return interaction.reply({
-			content: `You have an open ticket already ${interaction.client.tickets.get(interaction.user.id).channel}`,
+			content: `You have an open ticket already ${tickets.get(interaction.user.id)!.channel}`,
 			ephemeral: true
 		});
 
@@ -99,7 +99,7 @@ const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteract
 			}
 		]
 	})) as TextChannel;
-	interaction.client.tickets.set(ticket.user.id, ticket);
+	tickets.set(ticket.user.id, ticket);
 
 	ticket.channel.send(
 		`Welcome ${ticket.user}, please ask you question here.\nMake sure to explain in detail so that our <@&893483433538510898> staff can help you easily.\nThis ticket will be deleted automatically if you do not respond`
