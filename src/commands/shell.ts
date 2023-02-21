@@ -3,7 +3,7 @@ import { codeBlock } from '@sapphire/utilities';
 import type { ExecException } from 'child_process';
 import type { Message } from 'discord.js';
 import { inspect, promisify } from 'util';
-import { emotes } from '../../utils/emotes.js';
+import { emotes } from '../utils/emotes.js';
 
 export class ShellCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {

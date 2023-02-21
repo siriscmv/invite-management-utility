@@ -3,7 +3,7 @@ import { Type } from '@sapphire/type';
 import { codeBlock, isThenable } from '@sapphire/utilities';
 import type { CommandInteraction, Message } from 'discord.js';
 import { inspect } from 'util';
-import { emotes } from '../../utils/emotes.js';
+import { emotes } from '../utils/emotes.js';
 
 export class EvalCommand extends Command {
 	public constructor(context: Command.Context, options: Command.Options) {

@@ -1,4 +1,5 @@
 import { Client, IntentsBitField, Partials, Options } from 'discord.js';
+import { readdir } from 'fs/promises';
 import { mainBot } from './config';
 
 const client = new Client({
@@ -41,4 +42,15 @@ const client = new Client({
 	})
 });
 
-client.login(process.env.DISCORD_TOKEN!);
+const initializeEvents = async (client: Client) => {
+	const events = await readdir('./events');
+	for (const event of events) {
+		const { default: run } = await import(`./events/${event}`);
+		const eventName = event.split('.')[0];
+
+		if (eventName === 'ready') client.on(eventName, run.bind(null, client));
+		else client.on(eventName, run);
+	}
+};
+
+initializeEvents(client).then(() => client.login(process.env.DISCORD_TOKEN!));
