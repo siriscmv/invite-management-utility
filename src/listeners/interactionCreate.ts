@@ -1,14 +1,10 @@
 import {
 	ButtonInteraction,
-	GuildTextBasedChannel,
 	Interaction,
 	ActionRowBuilder,
 	EmbedBuilder,
-	ModalComponentBuilder,
 	ModalSubmitInteraction,
 	OverwriteType,
-	PermissionResolvable,
-	TextInputComponent,
 	TextInputBuilder,
 	TextInputStyle,
 	ModalBuilder,
@@ -18,7 +14,7 @@ import {
 } from 'discord.js';
 import * as config from '../config.js';
 import sleep from '../utils/sleep.js';
-import { Ticket } from '../utils/Ticket.js';
+import Ticket from '../utils/Ticket.js';
 
 export default async function run(interaction: Interaction) {
 	if (interaction.guildId !== config.mainServer) return;
