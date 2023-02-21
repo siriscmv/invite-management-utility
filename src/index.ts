@@ -1,6 +1,7 @@
 import { Client, IntentsBitField, Partials, Options } from 'discord.js';
 import { readdir } from 'fs/promises';
 import { mainBot } from './config';
+import { loadCommands } from './utils/commands';
 
 const client = new Client({
 	intents: [
@@ -42,7 +43,7 @@ const client = new Client({
 	})
 });
 
-const initializeEvents = async (client: Client) => {
+const loadEvents = async (client: Client) => {
 	const events = await readdir('./events');
 	for (const event of events) {
 		const { default: run } = await import(`./events/${event}`);
@@ -53,4 +54,4 @@ const initializeEvents = async (client: Client) => {
 	}
 };
 
-initializeEvents(client).then(() => client.login(process.env.DISCORD_TOKEN!));
+Promise.all([loadEvents(client), loadCommands()]).then(() => client.login(process.env.DISCORD_TOKEN!));
