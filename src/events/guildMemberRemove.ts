@@ -1,4 +1,5 @@
 import { GuildMember, EmbedBuilder, TextChannel } from 'discord.js';
+import { tickets } from '../utils/Ticket.js';
 import { mainServer, boostLogs, boosterRole, logChannel, red } from '../config.js';
 
 export default function run(member: GuildMember) {
@@ -19,6 +20,8 @@ export default function run(member: GuildMember) {
 				.setDescription(`・${member}\n・Joined <t:${Math.round((member.joinedTimestamp ?? 0) / 1000)}:R>`)
 		]
 	});
+
+	if (tickets.has(member.id)) tickets.get(member.id)!.delete(member, 'User left the server');
 
 	if (member.roles.cache.has(boosterRole) || member.premiumSince) {
 		boostLog.send({

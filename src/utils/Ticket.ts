@@ -8,7 +8,7 @@ import {
 	TextChannel,
 	Collection
 } from 'discord.js';
-import { ticketLogsChannel, transcriptChannel, staffRoles, red, color } from '../config.js';
+import { ticketLogsChannel, transcriptChannel, red, color } from '../config.js';
 
 export default class Ticket {
 	ticketNumber: number;
@@ -33,13 +33,17 @@ export default class Ticket {
 			: 'none';
 	}
 
-	async delete(staff: GuildMember) {
+	async delete(staff: GuildMember, note?: string) {
 		await this.log(staff);
 
 		const em = new EmbedBuilder()
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
 			.setTitle(`Ticket ${this.ticketNumber} deleted`)
-			.setDescription(`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${staff.user.tag}\``)
+			.setDescription(
+				`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${staff.user.tag}\`${
+					note ? `\n・${note}` : ''
+				}`
+			)
 			.setColor(red)
 			.setFooter({ text: this.user.id })
 			.setTimestamp();
