@@ -3,7 +3,7 @@ import { uptimeLogs, owners, mainServer, mainBot } from '../config.js';
 
 export async function run(oldPresence: Presence, newPresence: Presence) {
 	if (newPresence.userId !== mainBot || newPresence.guild?.id !== mainServer) return;
-	if (oldPresence && (!newPresence || ['offline', 'invisible'].includes(newPresence.status)))
+	if (oldPresence && ['offline', 'invisible'].includes(newPresence.status))
 		(oldPresence.client.channels.cache.get(uptimeLogs)! as TextChannel).send({
 			content: `<:noCross:927910058287857755> | ${owners.map((id) => `<@${id}>`).join(', ')} | ${
 				oldPresence.user?.tag
