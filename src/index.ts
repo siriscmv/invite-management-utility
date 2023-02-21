@@ -28,7 +28,7 @@ const client = new Client({
 		GuildScheduledEventManager: 0,
 		GuildStickerManager: 0,
 		GuildTextThreadManager: 0,
-		MessageManager: 0,
+		MessageManager: 100,
 		PresenceManager: {
 			maxSize: 1,
 			keepOverLimit: (presence) => presence.userId === mainBot
