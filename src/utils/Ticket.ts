@@ -17,20 +17,20 @@ export default class Ticket {
 	channel: TextChannel | null;
 	reason: string;
 
-	constructor(ticketNumber:number, user:User, channel:TextChannel | null, reason:string) {
+	constructor(ticketNumber: number, user: User, channel: TextChannel | null, reason: string) {
 		this.ticketNumber = ticketNumber;
 		this.user = user;
 		this.channel = channel;
 		this.reason = reason;
 	}
 
-	static async fromInteraction (interaction: ModalSubmitInteraction | ButtonInteraction) {
-			const ticketCounter = parseInt((await prisma.kv.findUnique({ where: { key: 'ticket_counter' } }))!.value);
-			await prisma.kv.update({where: {key: 'ticket_counter'}, data: {value: (ticketCounter + 1).toString()}});
+	static async fromInteraction(interaction: ModalSubmitInteraction | ButtonInteraction) {
+		const ticketCounter = parseInt((await prisma.kv.findUnique({ where: { key: 'ticket_counter' } }))!.value);
+		await prisma.kv.update({ where: { key: 'ticket_counter' }, data: { value: (ticketCounter + 1).toString() } });
 
-			//@ts-ignore
-			return new Ticket(ticketCounter + 1,  interaction.user, null,  interaction.components[0].components[0].value);
-		}
+		//@ts-ignore
+		return new Ticket(ticketCounter + 1, interaction.user, null, interaction.components[0].components[0].value);
+	}
 
 	async delete(staff: GuildMember, note?: string) {
 		await this.log(staff);

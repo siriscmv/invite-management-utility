@@ -8,7 +8,7 @@ import {
 	MessageActionRowComponentBuilder
 } from 'discord.js';
 import { emotes } from '../utils/emotes.js';
-import { boostChannel, ticketChannel, mainServer, boostPerks, prefix, tagPrefix } from '../config.js';
+import { boostChannel, ticketChannel, mainServer, boostPerks, prefix, tagPrefix, mauve } from '../config.js';
 import commands from 'src/utils/commands.js';
 import tags from 'src/utils/tags.js';
 
@@ -44,7 +44,7 @@ export async function run(msg: Message): Promise<undefined> {
 		if (msg.system) {
 			channel.send(`${msg.author} Thank you for boosting!, make a ticket in <#${ticketChannel}> to claim your perks.`);
 		}
-		const embed = new EmbedBuilder().setColor('#f5c2e7').setTitle('Boost Perks');
+		const embed = new EmbedBuilder().setColor(mauve).setTitle('Boost Perks');
 
 		const button = new ButtonBuilder()
 			.setStyle(ButtonStyle.Link)

@@ -30,14 +30,18 @@ const command: Command = {
 export default command;
 
 const listTags = async (msg: Message) => {
-	(msg.channel as TextChannel).send(Array.from(tags.keys()).map((t) => `\`${t}\``).join(', '));
+	(msg.channel as TextChannel).send(
+		Array.from(tags.keys())
+			.map((t) => `\`${t}\``)
+			.join(', ')
+	);
 };
 
 const addTag = async (msg: Message) => {
 	const args = msg.content.split(' ');
 	args.shift(); // Remove command name
 	args.shift(); // Remove subcommand name
-	const trigger = args.shift()?.trim(); 
+	const trigger = args.shift()?.trim();
 	const response = args.join(' ').trim();
 
 	if (!trigger || response.length === 0) return msg.reply('Invalid syntax. Use `tags add <trigger> <response>`');
@@ -47,7 +51,8 @@ const addTag = async (msg: Message) => {
 		data: {
 			trigger,
 			response
-		}});
+		}
+	});
 
 	tags.set(trigger, response);
 

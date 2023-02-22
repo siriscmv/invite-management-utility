@@ -11,6 +11,7 @@
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
 		"start": "npm run build && node -r dotenv/config ./prod/index.js",
 		"pm2": "npm run build && pm2 start imu.yml",
+		"fmt": "npx prettier --write ./src/*",
 		"build": "rm -rf prod && mkdir prod && tsc"
 	},
 	"repository": {

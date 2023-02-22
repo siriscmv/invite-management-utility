@@ -25,6 +25,8 @@ export const logChannel = '887297621251747860';
 
 export const red = '#f38ba8';
 export const green = '#a6e3a1';
+export const mauve = '#f5c2e7';
+export const peach = '#fab387';
 
 export const rolesMenu = {
 	channel: '887300013103906866',
