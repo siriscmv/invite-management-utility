@@ -7,32 +7,12 @@ datasource db {
   url      = "file:database.sqlite"
 }
 
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model data {
-  server_id String?  @id
-  data      String?
-  createdAt DateTime
-  updatedAt DateTime
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
-model knowledgeBases {
-  question  String?  @id
-  answer    String?
-  createdAt DateTime
-  updatedAt DateTime
-
-  @@ignore
-}
-
-/// The underlying table does not contain a valid unique identifier and can therefore currently not be handled by the Prisma Client.
 model tags {
-  trigger   String?  @id
-  response  String?
-  createdAt DateTime
-  updatedAt DateTime
+  trigger   String  @id
+  response  String
+}
 
-  @@ignore
+model kv {
+  key   String  @id
+  value String
 }
