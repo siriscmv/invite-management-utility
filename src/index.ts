@@ -2,6 +2,7 @@ import { Client, IntentsBitField, Partials, Options } from 'discord.js';
 import { readdir } from 'fs/promises';
 import { mainBot } from './config';
 import { loadCommands } from './utils/commands';
+import { loadTags } from './utils/tags';
 
 const client = new Client({
 	intents: [
@@ -54,4 +55,4 @@ const loadEvents = async (client: Client) => {
 	}
 };
 
-Promise.all([loadEvents(client), loadCommands()]).then(() => client.login(process.env.DISCORD_TOKEN!));
+Promise.all([loadEvents(client), loadCommands(), loadTags()]).then(() => client.login(process.env.DISCORD_TOKEN!));

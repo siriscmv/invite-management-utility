@@ -6,7 +6,8 @@ export const color = '#89B4FA';
 
 export const boostLogs = '933986347117576292';
 export const voterRole = '887693588375408701';
-export const prefixes = ['$'];
+export const prefix = '$';
+export const tagPrefix = '?';
 export const blacklistedWords = ['@everyone', '@here'];
 export const boostChannel = '906882529896853554';
 export const mainBot = '873934253468024852';

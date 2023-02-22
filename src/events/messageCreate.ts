@@ -8,10 +8,34 @@ import {
 	MessageActionRowComponentBuilder
 } from 'discord.js';
 import { emotes } from '../utils/emotes.js';
-import { boostChannel, ticketChannel, mainServer, boostPerks } from '../config.js';
+import { boostChannel, ticketChannel, mainServer, boostPerks, prefix, tagPrefix } from '../config.js';
+import commands from 'src/utils/commands.js';
+import tags from 'src/utils/tags.js';
 
 export async function run(msg: Message): Promise<undefined> {
 	if (msg.author.bot || msg.webhookId || msg.guildId !== mainServer) return;
+
+	if (msg.content.startsWith(prefix)) {
+		const commandName = msg.content.slice(prefix.length).trim().split(/ +/).shift()!.toLowerCase();
+		const command = commands.get(commandName) || commands.find((c) => c.aliases?.includes(commandName));
+		if (!command) return;
+		if (command.shouldRun) {
+			const shouldRun = await command.shouldRun(msg);
+			if (shouldRun === true) {
+				await command.run(msg);
+			} else {
+				msg.reply(typeof shouldRun === 'string' ? shouldRun : 'You do not have permission to run this command');
+			}
+		} else {
+			await command.run(msg);
+		}
+	}
+
+	if (msg.content.startsWith(tagPrefix)) {
+		const trigger = msg.content.slice(tagPrefix.length);
+		const response = tags.get(trigger);
+		if (response) msg.reply(response);
+	}
 
 	if (msg.channelId === boostChannel) {
 		const channel = msg.channel as TextChannel;
@@ -31,11 +55,5 @@ export async function run(msg: Message): Promise<undefined> {
 		const comp = new ActionRowBuilder<MessageActionRowComponentBuilder>().setComponents([button]);
 
 		channel.send({ embeds: [embed], components: [comp] });
-	}
-
-	if (msg.content.startsWith(msg.client.tags.prefix)) {
-		const trigger = msg.content.slice(msg.client.tags.prefix.length);
-		const data = msg.client.tags.get(trigger);
-		if (data) msg.reply(JSON.parse(data));
 	}
 }
