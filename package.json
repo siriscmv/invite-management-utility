@@ -5,7 +5,7 @@
 	"main": "prod/index.js",
 	"type": "module",
 	"prisma": {
-		"schema": "utils/schema.prisma"
+		"schema": "./src/utils/schema.prisma"
 	},
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
@@ -23,14 +23,8 @@
 		"url": "https://github.com/Siris01/invite-management-utility/issues"
 	},
 	"homepage": "https://github.com/Siris01/invite-management-utility#readme",
-	"devDependencies": {
-		"@types/node": "^18.14.0",
-		"eslint": "^8.6.0",
-		"prettier": "2.8.4",
-		"tslib": "^2.4.0",
-		"typescript": "^4.5.4"
-	},
 	"dependencies": {
+		"@prisma/client": "^4.10.1",
 		"@types/sequelize": "^4.28.11",
 		"discord.js": "^14.7.1",
 		"dotenv": "^16.0.3",
@@ -42,6 +36,14 @@
 		"sqlite3": "^5.0.2",
 		"unidecode": "^0.1.8",
 		"unorm": "^1.6.0"
+	},
+	"devDependencies": {
+		"@types/node": "^18.14.0",
+		"eslint": "^8.6.0",
+		"prettier": "2.8.4",
+		"prisma": "^4.10.1",
+		"tslib": "^2.4.0",
+		"typescript": "^4.5.4"
 	},
 	"overrides": {
 		"discord-api-types": "^0.37.20"

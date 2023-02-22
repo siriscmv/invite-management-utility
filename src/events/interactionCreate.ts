@@ -63,7 +63,7 @@ const askReasonForTicket = (interaction: ButtonInteraction) => {
 };
 
 const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteraction) => {
-	const ticket = new Ticket(interaction);
+	const ticket = await Ticket.fromInteraction(interaction);
 
 	ticket.channel = (await interaction.guild!.channels.create({
 		name: `ticket-${ticket.ticketNumber}`,

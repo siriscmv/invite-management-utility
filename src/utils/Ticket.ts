@@ -9,6 +9,7 @@ import {
 	Collection
 } from 'discord.js';
 import { ticketLogsChannel, transcriptChannel, red, color } from '../config.js';
+import prisma from '../utils/prisma.js';
 
 export default class Ticket {
 	ticketNumber: number;
@@ -16,22 +17,20 @@ export default class Ticket {
 	channel: TextChannel | null;
 	reason: string;
 
-	constructor(interaction: ModalSubmitInteraction | ButtonInteraction | null, channel?: TextChannel, author?: User) {
-		let prev: number | null;
-		if (interaction) {
-			prev = db.get('ticketCounter') as number;
-			db.set('ticketCounter', prev + 1);
-		}
-
-		this.ticketNumber = interaction ? prev! + 1 : parseInt(channel?.name?.split('-')[1] ?? '0');
-		this.user = author ?? interaction!.user;
-		this.channel = (channel as TextChannel) ?? null;
-		this.reason = channel
-			? channel.topic ?? 'none'
-			: interaction!.isModalSubmit() //TODO: fix?
-			? interaction.components[0].components[0].value
-			: 'none';
+	constructor(ticketNumber:number, user:User, channel:TextChannel | null, reason:string) {
+		this.ticketNumber = ticketNumber;
+		this.user = user;
+		this.channel = channel;
+		this.reason = reason;
 	}
+
+	static async fromInteraction (interaction: ModalSubmitInteraction | ButtonInteraction) {
+			const ticketCounter = parseInt((await prisma.kv.findUnique({ where: { key: 'ticket_counter' } }))!.value);
+			await prisma.kv.update({where: {key: 'ticket_counter'}, data: {value: (ticketCounter + 1).toString()}});
+
+			//@ts-ignore
+			return new Ticket(ticketCounter + 1,  interaction.user, null,  interaction.components[0].components[0].value);
+		}
 
 	async delete(staff: GuildMember, note?: string) {
 		await this.log(staff);

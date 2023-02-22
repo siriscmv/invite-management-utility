@@ -20,7 +20,7 @@ export async function run(client: Client) {
 	for (const ticket of ticketChannels) {
 		const ticketAuthor = ticket.permissionOverwrites.cache.find((p) => p.type === OverwriteType.Member)?.id;
 		if (!ticketAuthor) continue;
-		const t = new Ticket(null, ticket, await client.users.fetch(ticketAuthor));
+		const t = new Ticket(parseInt(ticket.name.split('-')[1] ?? '0'), await client.users.fetch(ticketAuthor), ticket, ticket.topic! );
 		tickets.set(ticketAuthor, t);
 	}
 }

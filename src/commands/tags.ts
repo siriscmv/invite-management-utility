@@ -1,5 +1,7 @@
-import { Message } from 'discord.js';
+import { Message, TextChannel } from 'discord.js';
 import { staffRoles } from 'src/config';
+import prisma from 'src/utils/prisma';
+import tags from 'src/utils/tags';
 import { Command } from '../utils/commands';
 
 const command: Command = {
@@ -28,30 +30,45 @@ const command: Command = {
 export default command;
 
 const listTags = async (msg: Message) => {
-	const tags = await (msg.client as SapphireClient).tags.raw.findAll();
-	const tagList = tags.map(
-		(tag: { trigger: any; createdAt: string | number | Date }) =>
-			`**${tag.trigger}** <t:${Math.round(new Date(tag.createdAt).getTime() / 1000)}:R>`
-	);
-	msg.channel.send(tagList.join('\n'));
+	(msg.channel as TextChannel).send(Array.from(tags.keys()).map((t) => `\`${t}\``).join(', '));
 };
 
 const addTag = async (msg: Message) => {
-	const trigger = await args.pick('string');
-	const response = await args.rest('message').catch(() => args.rest('string'));
-	const data =
-		response instanceof Message
-			? JSON.stringify({ content: response.content, embeds: response.embeds, components: response.components })
-			: JSON.stringify(response);
+	const args = msg.content.split(' ');
+	args.shift(); // Remove command name
+	args.shift(); // Remove subcommand name
+	const trigger = args.shift()?.trim(); 
+	const response = args.join(' ').trim();
 
-	await msg.client.tags.set(trigger, data);
-	return msg.reply(`Tag added with name \`${trigger}\``);
+	if (!trigger || response.length === 0) return msg.reply('Invalid syntax. Use `tags add <trigger> <response>`');
+	if (tags.has(trigger)) return msg.reply('Tag already exists.');
+
+	await prisma.tags.create({
+		data: {
+			trigger,
+			response
+		}});
+
+	tags.set(trigger, response);
+
+	return msg.reply('Tag added.');
 };
 
 const deleteTag = async (msg: Message) => {
-	const name = await args.rest('string');
-	const tag = msg.client.tags.get(name);
-	if (!tag) return msg.reply('Tag not found.');
-	await msg.client.tags.delete(name);
+	const args = msg.content.split(' ');
+	args.shift(); // Remove command name
+	args.shift(); // Remove subcommand name
+	const trigger = args.shift()?.trim();
+
+	if (!trigger) return msg.reply('Invalid syntax. Use `tags delete <trigger>`');
+	if (!tags.has(trigger)) return msg.reply('Tag does not exist.');
+
+	await prisma.tags.delete({
+		where: {
+			trigger
+		}
+	});
+
+	tags.delete(trigger);
 	return msg.reply('Tag deleted.');
 };
