@@ -1,3 +1,4 @@
+/*
 import { Args, Command } from '@sapphire/framework';
 import { codeBlock } from '@sapphire/utilities';
 import type { ExecException } from 'child_process';
@@ -41,3 +42,6 @@ export class ShellCommand extends Command {
 		return message.reply(`${output}`);
 	}
 }
+
+*/
+//TODO

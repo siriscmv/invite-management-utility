@@ -1,24 +1,27 @@
-import { Command } from '@sapphire/framework';
-import type { Message } from 'discord.js';
-import type { Ticket } from '../utils/Ticket';
+import { Message, TextChannel } from 'discord.js';
+import { staffRoles } from 'src/config';
+import Ticket, { tickets, isDeleting } from 'src/utils/Ticket';
+import { Command } from '../utils/commands';
 
-export class DeleteTicketCommand extends Command {
-	public constructor(context: Command.Context, options: Command.Options) {
-		super(context, {
-			...options,
-			name: 'delete',
-			description: 'Delete a ticket',
-			preconditions: ['StaffOnly']
-		});
-	}
+const command: Command = {
+	name: 'delete',
+	aliases: ['close'],
+	shouldRun: (msg: Message) => {
+		const ticket: Ticket | undefined = tickets.find((t: Ticket) => t.channel?.id === msg.channelId);
+		if (!ticket) return 'This command can only be used in tickets';
 
-	public async messageRun(msg: Message) {
-		const ticket: Ticket | undefined = msg.client.tickets.find((t: Ticket) => t.channel?.id === msg.channelId);
+		if (isDeleting()) return 'The bot is currently deleting another ticket, please wait.';
+		if (msg.member!.roles.cache.some((r) => staffRoles.includes(r.id))) return true;
+		if (ticket.user.id === msg.author.id) return true;
 
-		if (msg.client.deleting) return msg.reply('The bot is currently deleting another ticket, please wait.');
-
-		if (!ticket) return msg.reply(`This command can only be used in tickets`);
-		msg.channel.send('Deleting ticket ...');
+		return false;
+	},
+	run: (msg: Message) => {
+		const ticket: Ticket = tickets.find((t: Ticket) => t.channel?.id === msg.channelId)!;
+		const channel = msg.channel as TextChannel;
+		channel.send('Deleting ticket ...');
 		return ticket.delete(msg.member!);
 	}
-}
+};
+
+export default command;

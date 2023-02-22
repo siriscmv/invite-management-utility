@@ -32,7 +32,6 @@
 	},
 	"dependencies": {
 		"@types/sequelize": "^4.28.11",
-		"discord-api-types": "^0.37.10",
 		"discord.js": "^14.7.1",
 		"dotenv": "^16.0.3",
 		"latinize": "^0.5.0",
@@ -43,5 +42,8 @@
 		"sqlite3": "^5.0.2",
 		"unidecode": "^0.1.8",
 		"unorm": "^1.6.0"
+	},
+	"overrides": {
+		"discord-api-types": "^0.37.20"
 	}
 }

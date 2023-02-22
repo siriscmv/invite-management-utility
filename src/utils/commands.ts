@@ -1,9 +1,9 @@
 import { Collection, Message } from 'discord.js';
 import { readdir } from 'fs/promises';
 
-interface Command {
+export interface Command {
 	name: string;
-	shouldRun?: (msg: Message) => boolean;
+	shouldRun?: (msg: Message) => string | boolean;
 	run: (msg: Message) => Promise<unknown>;
 	aliases?: string[];
 }

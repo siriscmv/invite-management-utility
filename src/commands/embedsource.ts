@@ -1,66 +1,66 @@
-import { Args, Command } from '@sapphire/framework';
-import { Message, MessageEmbed } from 'discord.js';
+import { Message, TextChannel, EmbedBuilder } from 'discord.js';
+import { staffRoles } from 'src/config';
+import Ticket, { tickets, isDeleting } from 'src/utils/Ticket';
+import { Command } from '../utils/commands';
 
-export class EmbedSourceCommand extends Command {
-	public constructor(context: Command.Context, options: Command.Options) {
-		super(context, {
-			...options,
-			name: 'embedsource',
-			aliases: ['raw', 'es', 'restore'],
-			description: 'Get the raw json of any message',
-			flags: ['clean']
-		});
-	}
-
-	public async messageRun(msg: Message, args: Args) {
-		const m = await args
-			.pick('message')
-			.catch(async () => (msg.reference?.messageId ? await msg.fetchReference() : null));
-		if (!m) return msg.reply('Please provide a message to get the source of.');
+const command: Command = {
+	name: 'embedsource',
+	aliases: ['raw', 'es', 'restore'],
+	run: async (msg: Message) => {
+		const channel = msg.channel as TextChannel;
+		const targetMessage = msg.reference?.messageId ? await msg.fetchReference() : await parseArg(msg);
+		if (!targetMessage) return msg.reply('Use a msg link/id or reply to an existing message');
 
 		const raw = {
-			content: m.content,
-			embeds: m.embeds.map((e) => e.toJSON()),
-			components: m.components.map((c) => c.toJSON())
+			content: targetMessage.content,
+			embeds: targetMessage.embeds.map((e) => e.toJSON()),
+			components: targetMessage.components.map((c) => c.toJSON())
 		};
 
-		const json = JSON.stringify(args.getFlags('clean') ? this.clean(raw) : raw, null, '\t');
+		const json = JSON.stringify(clean(raw), null, '\t');
 
 		return msg.reply({
 			embeds: [
-				new MessageEmbed()
-					.setTitle('Raw JSON')
-					.addField('Source', `[Click here](${m.url})`, true)
-					.addField('Cleaned', `${args.getFlags('clean')}`, true)
-					.addField('Length', `${json.length} characters`, true)
+				new EmbedBuilder().setTitle('Raw JSON').addFields([
+					{ name: 'Source', value: `[Click here](${targetMessage.url})`, inline: true },
+					{ name: 'Length', value: `${json.length} characters`, inline: true }
+				])
 			],
 			files: [
 				{
 					attachment: Buffer.from(json),
-					name: `${m.id}.json`
+					name: `${targetMessage.id}.json`
 				}
 			]
 		});
 	}
+};
 
-	private clean(object: any): {} {
-		Object.entries(object).forEach(([k, v]) => {
-			if (v && typeof v === 'object') {
-				this.clean(v);
+export default command;
+
+const parseArg = async (msg: Message) => {
+	const arg = msg.content.split(' ')[1];
+	if (/\d+/.test(arg)) return (await (msg.channel as TextChannel).messages.fetch(arg).catch(() => null)) ?? null;
+	else return false; //TODO: Parse URL here
+};
+
+const clean = (object: any) => {
+	Object.entries(object).forEach(([k, v]) => {
+		if (v && typeof v === 'object') {
+			clean(v);
+		}
+		if (
+			(v && typeof v === 'object' && !Object.keys(v).length) ||
+			v === null ||
+			v === undefined ||
+			['type', 'components', 'proxyURL', 'height', 'width'].includes(k)
+		) {
+			if (Array.isArray(object)) {
+				object.splice(parseInt(k), 1);
+			} else {
+				delete object[k];
 			}
-			if (
-				(v && typeof v === 'object' && !Object.keys(v).length) ||
-				v === null ||
-				v === undefined ||
-				['type', 'components', 'proxyURL', 'height', 'width'].includes(k)
-			) {
-				if (Array.isArray(object)) {
-					object.splice(parseInt(k), 1);
-				} else {
-					delete object[k];
-				}
-			}
-		});
-		return object;
-	}
-}
+		}
+	});
+	return object;
+};
