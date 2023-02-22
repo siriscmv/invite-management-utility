@@ -5,7 +5,6 @@ const command: Command = {
 	name: 'embedsource',
 	aliases: ['raw', 'es', 'restore'],
 	run: async (msg: Message) => {
-		const channel = msg.channel as TextChannel;
 		const targetMessage = msg.reference?.messageId ? await msg.fetchReference() : await parseArg(msg);
 		if (!targetMessage) return msg.reply('Use a msg link/id or reply to an existing message');
 

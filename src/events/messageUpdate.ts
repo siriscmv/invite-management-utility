@@ -8,7 +8,10 @@ export default async function run(oldMessage: Message, newMessage: Message) {
 		.setColor(red)
 		.setTitle('Message Updated')
 		.setTimestamp(Date.now())
-		.setAuthor({ name: newMessage.author?.tag, iconURL: newMessage.author?.displayAvatarURL() })
+		.setAuthor({
+			name: newMessage.author?.tag ?? 'unknown',
+			iconURL: newMessage.author?.displayAvatarURL() ?? undefined
+		})
 		.setFooter({ text: newMessage.id })
 		.addFields([
 			{
@@ -25,7 +28,11 @@ export default async function run(oldMessage: Message, newMessage: Message) {
 					'No content/uncached',
 				inline: false
 			},
-			{ name: 'Author', value: `\`${newMessage.author?.tag}\` (${newMessage.author?.id})`, inline: true }
+			{
+				name: 'Author',
+				value: `\`${newMessage.author?.tag ?? 'unknown'}\` (${newMessage.author?.id ?? ''})`,
+				inline: true
+			}
 		]);
 
 	(newMessage.client.channels.cache.get(logChannel) as TextChannel)!.send({ embeds: [embed] });

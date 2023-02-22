@@ -8,14 +8,14 @@ export default async function run(message: Message) {
 		.setColor(red)
 		.setTitle('Message Deleted')
 		.setTimestamp(Date.now())
-		.setAuthor({ name: message.author?.tag, iconURL: message.author?.displayAvatarURL() })
+		.setAuthor({ name: message.author?.tag ?? 'unknown', iconURL: message.author?.displayAvatarURL() ?? undefined })
 		.setFooter({ text: message.id })
 		.setDescription(
 			(message.content?.length > 1000 ? `${message.content.slice(0, 1000)} ...` : message.content) ??
 				'No content/uncached'
 		)
 		.addFields([
-			{ name: 'Author', value: `\`${message.author?.tag}\` (${message.author?.id})`, inline: true },
+			{ name: 'Author', value: `\`${message.author?.tag ?? 'unknown'}\` (${message.author?.id ?? ''})`, inline: true },
 			{ name: 'Attachments', value: message.attachments.size.toString(), inline: true }
 		]);
 
