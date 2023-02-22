@@ -1,6 +1,4 @@
 import { Message, TextChannel, EmbedBuilder } from 'discord.js';
-import { staffRoles } from 'src/config';
-import Ticket, { tickets, isDeleting } from 'src/utils/Ticket';
 import { Command } from '../utils/commands';
 
 const command: Command = {
