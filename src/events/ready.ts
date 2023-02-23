@@ -13,6 +13,7 @@ export default async function run(client: Client) {
 		.filter(
 			(c) =>
 				c.parentId === '874647974075060305' &&
+				/ticket-\d+/.test(c.name) &&
 				!c.permissionsFor('903185636482240582')?.has(PermissionFlagsBits.ViewChannel)
 		)
 		.map((c) => c as TextChannel);
