@@ -13,13 +13,13 @@ const command: Command = {
 		let count = 0;
 
 		while (count !== amount + 1) {
-			const remaining = amount - count;
+			const remaining = amount + 1 - count;
 			const deleted = await (msg.channel as TextChannel).bulkDelete(Math.min(remaining, 100), true);
 			count += deleted.size;
 			if (deleted.size === 0) break;
 		}
 
-		return msg.reply(`Deleted ${count} messages`);
+		return (msg.channel as TextChannel).send(`Deleted ${count} messages`);
 	}
 };
 
