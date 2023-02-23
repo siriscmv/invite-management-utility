@@ -9,7 +9,7 @@ export interface Command {
 }
 
 export const loadCommands = async () => {
-	const commandNames = await readdir('./../commands');
+	const commandNames = await readdir('./prod/commands');
 	for (const commandName of commandNames) {
 		const { default: command } = await import(`./../commands/${commandName}`);
 		if (!command || !command.name || !command.run) continue;

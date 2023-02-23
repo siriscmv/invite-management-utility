@@ -45,7 +45,7 @@ const client = new Client({
 });
 
 const loadEvents = async (client: Client) => {
-	const events = await readdir('./events');
+	const events = await readdir('./prod/events');
 	for (const event of events) {
 		const { default: run } = await import(`./events/${event}`);
 		const eventName = event.split('.')[0];
@@ -54,5 +54,8 @@ const loadEvents = async (client: Client) => {
 		else client.on(eventName, run);
 	}
 };
+
+process.on('unhandledRejection', console.error);
+process.on('uncaughtException', console.error);
 
 Promise.all([loadEvents(client), loadCommands(), loadTags()]).then(() => client.login(process.env.DISCORD_TOKEN!));

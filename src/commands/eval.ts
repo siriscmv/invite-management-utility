@@ -1,5 +1,5 @@
 import { Message } from 'discord.js';
-import { owners } from 'src/config.js';
+import { owners } from './../config.js';
 import { Command } from '../utils/commands.js';
 import { inspect } from 'util';
 

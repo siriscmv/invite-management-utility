@@ -9,10 +9,10 @@ import {
 } from 'discord.js';
 import { emotes } from '../utils/emotes.js';
 import { boostChannel, ticketChannel, mainServer, boostPerks, prefix, tagPrefix, mauve } from '../config.js';
-import commands from 'src/utils/commands.js';
-import tags from 'src/utils/tags.js';
+import commands from './../utils/commands.js';
+import tags from './../utils/tags.js';
 
-export async function run(msg: Message): Promise<undefined> {
+export default async function run(msg: Message): Promise<undefined> {
 	if (msg.author.bot || msg.webhookId || msg.guildId !== mainServer) return;
 
 	if (msg.content.startsWith(prefix)) {

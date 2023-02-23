@@ -1,7 +1,7 @@
 import type { Presence, TextChannel } from 'discord.js';
 import { uptimeLogs, owners, mainServer, mainBot } from '../config.js';
 
-export async function run(oldPresence: Presence, newPresence: Presence) {
+export default async function run(oldPresence: Presence, newPresence: Presence) {
 	if (newPresence.userId !== mainBot || newPresence.guild?.id !== mainServer) return;
 	if (oldPresence && ['offline', 'invisible'].includes(newPresence.status))
 		(oldPresence.client.channels.cache.get(uptimeLogs)! as TextChannel).send({

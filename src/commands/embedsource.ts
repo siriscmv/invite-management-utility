@@ -3,7 +3,7 @@ import { Command } from '../utils/commands.js';
 
 const command: Command = {
 	name: 'embedsource',
-	aliases: ['raw', 'es', 'restore'],
+	aliases: ['raw', 'es'],
 	run: async (msg: Message) => {
 		const targetMessage = msg.reference?.messageId ? await msg.fetchReference() : await parseArg(msg);
 		if (!targetMessage) return msg.reply('Use a msg link/id or reply to an existing message');

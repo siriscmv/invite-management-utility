@@ -1,6 +1,6 @@
 import { Message, TextChannel } from 'discord.js';
-import { staffRoles } from 'src/config.js';
-import Ticket, { tickets, isDeleting } from 'src/utils/Ticket.js';
+import { staffRoles } from './../config.js';
+import Ticket, { tickets, isDeleting } from './../utils/Ticket.js';
 import { Command } from '../utils/commands.js';
 
 const command: Command = {

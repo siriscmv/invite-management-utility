@@ -2,7 +2,7 @@ import { Client, OverwriteType, PermissionFlagsBits, TextChannel } from 'discord
 import { mainServer, rolesMenu } from '../config.js';
 import Ticket, { tickets } from '../utils/Ticket.js';
 
-export async function run(client: Client) {
+export default async function run(client: Client) {
 	const { tag, id } = client.user!;
 	console.log(`Successfully logged in as ${tag} (${id})`);
 	await client.guilds.cache.get(mainServer)?.members.fetch({ withPresences: true });
