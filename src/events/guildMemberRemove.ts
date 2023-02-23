@@ -1,6 +1,7 @@
 import { GuildMember, EmbedBuilder, TextChannel } from 'discord.js';
 import { tickets } from '../utils/Ticket.js';
 import { mainServer, boostLogs, boosterRole, logChannel, red } from '../config.js';
+import humanizeDuration from 'humanize-duration';
 
 export default async function run(member: GuildMember) {
 	if (member.guild.id !== mainServer) return;
@@ -21,6 +22,16 @@ export default async function run(member: GuildMember) {
 					{
 						name: 'Member Joined',
 						value: `<t:${Math.round((member.joinedTimestamp ?? 0) / 1000)}:R>`,
+						inline: true
+					},
+					{
+						name: 'Member Count',
+						value: member.guild.memberCount.toLocaleString(),
+						inline: true
+					},
+					{
+						name: 'Duration of Stay',
+						value: humanizeDuration(Date.now() - member.joinedTimestamp!, { largest: 3 }),
 						inline: true
 					}
 				])
