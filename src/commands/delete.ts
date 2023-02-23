@@ -1,5 +1,5 @@
 import { Message, TextChannel } from 'discord.js';
-import { staffRoles } from './../config.js';
+import { owners, staffRoles } from './../config.js';
 import Ticket, { tickets, isDeleting } from './../utils/Ticket.js';
 import { Command } from '../utils/commands.js';
 
@@ -11,6 +11,7 @@ const command: Command = {
 		if (!ticket) return 'This command can only be used in tickets';
 
 		if (isDeleting()) return 'The bot is currently deleting another ticket, please wait.';
+		if (owners.includes(msg.author.id)) return true;
 		if (msg.member!.roles.cache.some((r) => staffRoles.includes(r.id))) return true;
 		if (ticket.user.id === msg.author.id) return true;
 
