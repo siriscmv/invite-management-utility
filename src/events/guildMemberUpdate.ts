@@ -57,7 +57,7 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 			: null
 	].filter((f) => f !== null) as { name: string; value: string }[];
 
-	log.send({
+	await log.send({
 		embeds: [
 			new EmbedBuilder(baseEmbed.data)
 				.setColor(peach)
@@ -68,7 +68,7 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 	});
 
 	if (oldMember.premiumSinceTimestamp && !newMember.premiumSinceTimestamp) {
-		boostLog.send({
+		await boostLog.send({
 			embeds: [
 				baseEmbed
 					.setColor(red)
@@ -79,7 +79,7 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 			]
 		});
 	} else if (!oldMember.premiumSinceTimestamp && newMember.premiumSinceTimestamp) {
-		boostLog.send({
+		await boostLog.send({
 			embeds: [
 				baseEmbed
 					.setColor(green)

@@ -13,16 +13,25 @@ export default async function run(member: GuildMember) {
 	await member.roles.add(verifiedRole);
 
 	const log = member.client.channels.cache.get(logChannel)! as TextChannel;
-	log.send({
+	await log.send({
 		embeds: [
 			new EmbedBuilder()
 				.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
 				.setFooter({ text: member.id })
 				.setTitle('Member Joined')
 				.setColor(green)
-				.setDescription(
-					`・${member}\n・Account created <t:${Math.round((member.user.createdTimestamp ?? 0) / 1000)}:R>`
-				)
+				.addFields([
+					{
+						name: 'Account Created',
+						value: `<t:${Math.round((member.user.createdTimestamp ?? 0) / 1000)}:R>`,
+						inline: true
+					},
+					{
+						name: 'Member Count',
+						value: member.guild.memberCount.toLocaleString(),
+						inline: true
+					}
+				])
 		]
 	});
 
