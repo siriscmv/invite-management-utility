@@ -12,6 +12,7 @@ export const loadCommands = async () => {
 	const commandNames = await readdir('./../commands');
 	for (const commandName of commandNames) {
 		const { default: command } = await import(`./../commands/${commandName}`);
+		if (!command || !command.name || !command.run) continue;
 		commands.set(command.name, command);
 	}
 };
