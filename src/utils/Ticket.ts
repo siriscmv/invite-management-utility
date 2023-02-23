@@ -10,6 +10,7 @@ import {
 } from 'discord.js';
 import { ticketLogsChannel, transcriptChannel, red, color } from '../config.js';
 import prisma from '../utils/prisma.js';
+import { createTranscript } from 'discord-html-transcripts';
 
 export default class Ticket {
 	ticketNumber: number;
@@ -60,18 +61,9 @@ export default class Ticket {
 
 		deleting = true;
 
-		do {
-			msgs = (await this.channel!.messages.fetch({ before: first })).map((m) => m);
-			if (!msgs || msgs.length === 0) break;
-
-			const firstMsgId: string = msgs![msgs!.length - 1]?.id;
-			if (first === firstMsgId) break;
-
-			msgsArray.push(...msgs!);
-			first = firstMsgId;
-		} while (true);
-
-		const data = this.makeTranscript(this.channel!.name, this.user, this.reason, msgsArray.reverse());
+		const transcript = await createTranscript(this.channel!, {
+			poweredBy: false
+		});
 
 		deleting = false;
 
@@ -85,24 +77,8 @@ export default class Ticket {
 
 		return await (staff.client.channels.cache.get(transcriptChannel) as TextChannel).send({
 			embeds: [em],
-			files: [{ name: `ticket-${this.ticketNumber}.html`, attachment: Buffer.from(data) }]
+			files: [transcript]
 		});
-	}
-
-	private makeTranscript(channelName: string, author: User, reason: string, messages: Message[]) {
-		return `${channelName}\nAuthor・${author.tag} (${author.id})\nReason・${reason}\nMessages・${
-			messages.length
-		}\nCreated・${messages[0].createdAt.toLocaleString('en-IN', { timeZone: 'IST' })}\nDeleted・${new Date(
-			Date.now()
-		).toLocaleString('en-IN', { timeZone: 'IST' })}\n\nMessages:\n\n${messages
-			.map(
-				(m) =>
-					`${m.author.tag} (${m.author.id}) | ${m.createdAt.toLocaleString('en-ID', { timeZone: 'IST' })} | ${
-						m.content
-					}`
-			)
-			.join('\n')}
-		`;
 	}
 }
 
