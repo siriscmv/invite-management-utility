@@ -3,15 +3,15 @@
 	"version": "1.0.0",
 	"description": "Open source utility bot",
 	"main": "prod/index.js",
-	"eslintConfig": {
-		"extends": "@sapphire"
-	},
 	"type": "module",
-	"prettier": "@sapphire/prettier-config",
+	"prisma": {
+		"schema": "./src/utils/schema.prisma"
+	},
 	"scripts": {
 		"dev": "ts-node-dev --respawn --transpile-only ./src/index.ts",
 		"start": "npm run build && node -r dotenv/config ./prod/index.js",
 		"pm2": "npm run build && pm2 start imu.yml",
+		"fmt": "npx prettier --write ./src/*",
 		"build": "rm -rf prod && mkdir prod && tsc"
 	},
 	"repository": {
@@ -24,38 +24,27 @@
 		"url": "https://github.com/Siris01/invite-management-utility/issues"
 	},
 	"homepage": "https://github.com/Siris01/invite-management-utility#readme",
+	"dependencies": {
+		"@prisma/client": "^4.10.1",
+		"discord-html-transcripts": "^3.1.3",
+		"discord.js": "^14.7.1",
+		"dotenv": "^16.0.3",
+		"latinize": "^0.5.0",
+		"moment": "^2.29.4",
+		"node-fetch": "^3.2.0",
+		"remove-accents": "^0.4.2",
+		"unidecode": "^0.1.8",
+		"unorm": "^1.6.0"
+	},
 	"devDependencies": {
-		"@sapphire/eslint-config": "^4.0.8",
-		"@sapphire/prettier-config": "^1.2.7",
-		"@sapphire/ts-config": "^3.1.6",
-		"@types/natural": "^5.1.0",
-		"@types/node": "^17.0.5",
+		"@types/node": "^18.14.0",
 		"eslint": "^8.6.0",
-		"prettier": "2.5.1",
+		"prettier": "2.8.4",
+		"prisma": "^4.10.1",
 		"tslib": "^2.4.0",
 		"typescript": "^4.5.4"
 	},
-	"dependencies": {
-		"@sapphire/discord.js-utilities": "^4.1.5",
-		"@sapphire/framework": "^2.3.0",
-		"@sapphire/plugin-logger": "^2.1.1",
-		"@sapphire/plugin-subcommands": "^2.1.3",
-		"@sapphire/type": "^2.1.2",
-		"@sapphire/utilities": "^3.9.2",
-		"@types/sequelize": "^4.28.11",
-		"@types/util.promisify": "^1.0.4",
-		"compromise": "^13.11.4",
-		"discord-api-types": "^0.37.10",
-		"discord.js": "^13.8.1",
-		"dotenv": "^10.0.0",
-		"latinize": "^0.5.0",
-		"moment": "^2.29.4",
-		"natural": "^5.1.13",
-		"node-fetch": "^3.2.0",
-		"remove-accents": "^0.4.2",
-		"sequelize": "^6.12.5",
-		"sqlite3": "^5.0.2",
-		"unidecode": "^0.1.8",
-		"unorm": "^1.6.0"
+	"overrides": {
+		"discord-api-types": "^0.37.20"
 	}
 }

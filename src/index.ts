@@ -1,33 +1,62 @@
-import { SapphireClient } from '@sapphire/framework';
-import '@sapphire/plugin-logger/register';
-import * as sq from 'sequelize';
-import { Settings } from './structures/Settings.js';
-import { Collection, WebhookClient } from 'discord.js';
-import { knowledgeBase } from './structures/KnowledgeBase.js';
-import { Tags } from './structures/Tags.js';
-import type { Ticket } from './structures/Ticket.js';
+import { Client, IntentsBitField, Partials, Options } from 'discord.js';
+import { readdir } from 'fs/promises';
+import { mainBot } from './config.js';
+import { loadCommands } from './utils/commands.js';
+import { loadTags } from './utils/tags.js';
 
-const client = new SapphireClient({
-	intents: ['GUILDS', 'GUILD_MESSAGES', 'GUILD_MEMBERS', 'GUILD_PRESENCES'],
-	failIfNotExists: false,
-	defaultPrefix: ['$']
+const client = new Client({
+	intents: [
+		IntentsBitField.Flags.Guilds,
+		IntentsBitField.Flags.GuildMessages,
+		IntentsBitField.Flags.GuildMessageReactions,
+		IntentsBitField.Flags.GuildMembers,
+		IntentsBitField.Flags.GuildPresences,
+		IntentsBitField.Flags.GuildModeration,
+		IntentsBitField.Flags.MessageContent
+	],
+	partials: [Partials.GuildMember, Partials.Message, Partials.User, Partials.Reaction],
+	presence: {
+		status: 'online'
+	},
+	makeCache: Options.cacheWithLimits({
+		AutoModerationRuleManager: 0,
+		ApplicationCommandManager: 0,
+		BaseGuildEmojiManager: 0,
+		GuildEmojiManager: 0,
+		GuildMemberManager: undefined,
+		GuildBanManager: 0,
+		GuildForumThreadManager: 0,
+		GuildInviteManager: 0,
+		GuildScheduledEventManager: 0,
+		GuildStickerManager: 0,
+		GuildTextThreadManager: 0,
+		MessageManager: 100,
+		PresenceManager: {
+			maxSize: 1,
+			keepOverLimit: (presence) => presence.userId === mainBot
+		},
+		ReactionManager: 0,
+		ReactionUserManager: 0,
+		StageInstanceManager: 0,
+		ThreadManager: 0,
+		ThreadMemberManager: 0,
+		UserManager: undefined,
+		VoiceStateManager: 0
+	})
 });
 
-const sequelize = new sq.Sequelize({
-	dialect: 'sqlite',
-	storage: 'database.sqlite',
-	logging: false
-});
+const loadEvents = async (client: Client) => {
+	const events = await readdir('./prod/events');
+	for (const event of events) {
+		const { default: run } = await import(`./events/${event}`);
+		const eventName = event.split('.')[0];
 
-client.sequelize = sequelize;
-client.db = new Settings(client);
-client.knowledgeBase = new knowledgeBase(client);
-client.tags = new Tags(client);
+		if (eventName === 'ready') client.on(eventName, run.bind(null, client));
+		else client.on(eventName, run);
+	}
+};
 
-client.tickets = new Collection<string, Ticket>();
-client.deleting = false;
+process.on('unhandledRejection', console.error);
+process.on('uncaughtException', console.error);
 
-client.webhooks = new Collection();
-client.webhooks.set('AI_SUPPORT', new WebhookClient({ url: process.env.AI_SUPPORT! }));
-
-client.login(process.env.DISCORD_TOKEN!);
+Promise.all([loadEvents(client), loadCommands(), loadTags()]).then(() => client.login(process.env.DISCORD_TOKEN!));
