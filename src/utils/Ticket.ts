@@ -1,7 +1,6 @@
 import {
 	ButtonInteraction,
 	GuildMember,
-	Message,
 	EmbedBuilder,
 	ModalSubmitInteraction,
 	User,
