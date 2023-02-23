@@ -20,9 +20,9 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 		roles.added.size > 0 || roles.removed.size > 0
 			? {
 					name: 'Roles',
-					value: `${roles.added.size ? '+ ' : ''}${roles.added.map(toString).join(' ')}\n${
+					value: `${roles.added.size ? '+ ' : ''}${roles.added.map((r) => r.toString()).join(' ')}\n${
 						roles.removed.size ? '- ' : ''
-					}${roles.removed.map((r) => r.name).join(' ')}`
+					}${roles.removed.map((r) => r.toString()).join(' ')}`
 			  }
 			: null,
 		oldMember.nickname !== newMember.nickname
