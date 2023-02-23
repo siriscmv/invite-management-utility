@@ -1,8 +1,8 @@
 import { Client, IntentsBitField, Partials, Options } from 'discord.js';
 import { readdir } from 'fs/promises';
-import { mainBot } from './config';
-import { loadCommands } from './utils/commands';
-import { loadTags } from './utils/tags';
+import { mainBot } from './config.js';
+import { loadCommands } from './utils/commands.js';
+import { loadTags } from './utils/tags.js';
 
 const client = new Client({
 	intents: [

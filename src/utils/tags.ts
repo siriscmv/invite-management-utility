@@ -1,5 +1,5 @@
 import { Collection } from 'discord.js';
-import prisma from './prisma';
+import prisma from './prisma.js';
 
 const tags = new Collection<string, string>();
 

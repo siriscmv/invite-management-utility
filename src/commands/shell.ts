@@ -1,6 +1,4 @@
 /*
-import { Args, Command } from '@sapphire/framework';
-import { codeBlock } from '@sapphire/utilities';
 import type { ExecException } from 'child_process';
 import type { Message } from 'discord.js';
 import { inspect, promisify } from 'util';

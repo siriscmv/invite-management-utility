@@ -1,5 +1,5 @@
 import { Message, TextChannel, EmbedBuilder } from 'discord.js';
-import { Command } from '../utils/commands';
+import { Command } from '../utils/commands.js';
 
 const command: Command = {
 	name: 'embedsource',

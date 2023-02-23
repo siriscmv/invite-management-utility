@@ -1,8 +1,8 @@
 import { Message, TextChannel } from 'discord.js';
-import { staffRoles } from 'src/config';
-import prisma from 'src/utils/prisma';
-import tags from 'src/utils/tags';
-import { Command } from '../utils/commands';
+import { staffRoles } from 'src/config.js';
+import prisma from 'src/utils/prisma.js';
+import tags from 'src/utils/tags.js';
+import { Command } from '../utils/commands.js';
 
 const command: Command = {
 	name: 'tags',

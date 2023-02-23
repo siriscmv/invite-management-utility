@@ -1,6 +1,6 @@
-import { Message, EmbedBuilder } from 'discord.js';
-import { owners } from 'src/config';
-import { Command } from '../utils/commands';
+import { Message } from 'discord.js';
+import { owners } from 'src/config.js';
+import { Command } from '../utils/commands.js';
 import { inspect } from 'util';
 
 const command: Command = {

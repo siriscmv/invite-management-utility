@@ -1,7 +1,7 @@
 import { Message, TextChannel } from 'discord.js';
-import { staffRoles } from 'src/config';
-import Ticket, { tickets, isDeleting } from 'src/utils/Ticket';
-import { Command } from '../utils/commands';
+import { staffRoles } from 'src/config.js';
+import Ticket, { tickets, isDeleting } from 'src/utils/Ticket.js';
+import { Command } from '../utils/commands.js';
 
 const command: Command = {
 	name: 'delete',
