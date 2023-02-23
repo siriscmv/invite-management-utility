@@ -3,6 +3,7 @@ import { mainServer, red, logChannel } from '../config.js';
 
 export default async function run(oldMessage: Message, newMessage: Message) {
 	if (newMessage.author?.bot || newMessage.webhookId || newMessage.guildId !== mainServer) return;
+	if (oldMessage.content === newMessage.content) return;
 
 	const embed = new EmbedBuilder()
 		.setColor(red)
