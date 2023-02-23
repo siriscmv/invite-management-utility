@@ -50,6 +50,7 @@ export default class Ticket {
 		await (staff.guild.channels.cache.get(ticketLogsChannel)! as TextChannel).send({ embeds: [em] });
 
 		tickets.delete(this.user.id);
+		this.channel!.messages.cache.clear();
 		return this.channel!.delete();
 	}
 
@@ -68,7 +69,11 @@ export default class Ticket {
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
 			.setFooter({ text: this.user.id })
 			.setTimestamp()
-			.setDescription(`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${staff.user.tag}\``);
+			.setDescription(
+				`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${
+					staff.user.tag
+				}\`\n・Total Messages: ${this.channel!.messages.cache.size}`
+			);
 
 		return await (staff.client.channels.cache.get(transcriptChannel) as TextChannel).send({
 			embeds: [em],
