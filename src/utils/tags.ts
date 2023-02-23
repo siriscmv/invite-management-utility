@@ -1,9 +1,13 @@
 import { Collection } from 'discord.js';
+import prisma from './prisma';
 
 const tags = new Collection<string, string>();
 
 export const loadTags = async () => {
-	//TODO: Fetch tags from database
+	const dbTags = await prisma.tags.findMany();
+	for (const tag of dbTags) {
+		tags.set(tag.trigger, tag.response);
+	}
 };
 
 export default tags;
