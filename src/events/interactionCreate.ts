@@ -125,5 +125,5 @@ const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteract
 	const shoudlClose = (await ticket.channel.messages.fetch()).filter((m) => m.author.id === ticket.user.id).size === 0;
 
 	if (!shoudlClose) return;
-	return ticket.delete(interaction.guild!.members.me!);
+	return ticket.delete(interaction.guild!.members.me!, 'User did not respond');
 };

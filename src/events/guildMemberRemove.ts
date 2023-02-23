@@ -27,7 +27,7 @@ export default async function run(member: GuildMember) {
 		]
 	});
 
-	if (tickets.has(member.id)) tickets.get(member.id)!.delete(member, 'User left the server');
+	if (tickets.has(member.id)) tickets.get(member.id)!.delete(member.guild!.members.me!, 'User left the server');
 
 	if (member.roles.cache.has(boosterRole) || member.premiumSince) {
 		await boostLog.send({

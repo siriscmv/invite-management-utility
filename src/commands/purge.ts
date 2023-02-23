@@ -19,7 +19,7 @@ const command: Command = {
 			if (deleted.size === 0) break;
 		}
 
-		return (msg.channel as TextChannel).send(`Deleted ${count} messages`);
+		return (msg.channel as TextChannel).send(`Deleted \`${count}\` messages`);
 	}
 };
 

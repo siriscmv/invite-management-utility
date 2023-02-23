@@ -1,5 +1,5 @@
 import { Message, TextChannel } from 'discord.js';
-import { owners, staffRoles } from './../config.js';
+import { owners, prefix, staffRoles } from './../config.js';
 import prisma from './../utils/prisma.js';
 import tags from './../utils/tags.js';
 import { Command } from '../utils/commands.js';
@@ -8,8 +8,10 @@ const command: Command = {
 	name: 'tags',
 	aliases: ['tag'],
 	shouldRun: (msg: Message) => {
+		if (msg.content === `${prefix}tags`) return true;
 		if (owners.includes(msg.author.id)) return true;
 		if (msg.member!.roles.cache.some((r) => staffRoles.includes(r.id))) return true;
+
 		if (msg.content.split(' ')[1]) return 'Use the `tags` command to view all tags';
 		return false;
 	},
