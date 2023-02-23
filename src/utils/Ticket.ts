@@ -55,10 +55,6 @@ export default class Ticket {
 	}
 
 	private async log(staff: GuildMember) {
-		const msgsArray: Message[] = [];
-		let first: string | undefined = undefined;
-		let msgs: Message[] | null = null;
-
 		deleting = true;
 
 		const transcript = await createTranscript(this.channel!, {

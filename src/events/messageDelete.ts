@@ -2,7 +2,7 @@ import { EmbedBuilder, TextChannel, Message } from 'discord.js';
 import { mainServer, red, logChannel } from '../config.js';
 
 export default async function run(message: Message) {
-	if (message.author.bot || message.webhookId || message.guildId !== mainServer) return;
+	if (message.author?.bot || message.webhookId || message.guildId !== mainServer) return;
 
 	const embed = new EmbedBuilder()
 		.setColor(red)
