@@ -37,6 +37,7 @@ export default class Ticket {
 
 		const em = new EmbedBuilder()
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
+			.setThumbnail(this.user.displayAvatarURL())
 			.setTitle(`Ticket ${this.ticketNumber} deleted`)
 			.setDescription(
 				`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${staff.user.tag}\`${
@@ -67,6 +68,7 @@ export default class Ticket {
 			.setTitle(`Ticket Transcript - ${this.ticketNumber}`)
 			.setColor(color)
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
+			.setThumbnail(this.user.displayAvatarURL())
 			.setFooter({ text: this.user.id })
 			.setTimestamp()
 			.setDescription(

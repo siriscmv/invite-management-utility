@@ -112,6 +112,7 @@ const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteract
 
 	const em = new EmbedBuilder()
 		.setAuthor({ name: ticket.user.tag, iconURL: ticket.user.displayAvatarURL() })
+		.setThumbnail(ticket.user.displayAvatarURL())
 		.setTitle(`Ticket Opened - ${ticket.ticketNumber}`)
 		.setColor(config.green)
 		.setDescription(ticket.reason)

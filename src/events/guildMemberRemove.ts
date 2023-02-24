@@ -11,6 +11,7 @@ export default async function run(member: GuildMember) {
 
 	const baseEmbed = new EmbedBuilder()
 		.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
+		.setThumbnail(member.user.displayAvatarURL())
 		.setFooter({ text: member.id });
 
 	await log.send({
@@ -18,6 +19,7 @@ export default async function run(member: GuildMember) {
 			baseEmbed
 				.setColor(red)
 				.setTitle('Member Left')
+				.setDescription(member.toString())
 				.addFields([
 					{
 						name: 'Member Joined',

@@ -17,8 +17,10 @@ export default async function run(member: GuildMember) {
 		embeds: [
 			new EmbedBuilder()
 				.setAuthor({ name: member.user.tag, iconURL: member.user.displayAvatarURL() })
+				.setThumbnail(member.user.displayAvatarURL())
 				.setFooter({ text: member.id })
 				.setTitle('Member Joined')
+				.setDescription(member.toString())
 				.setColor(green)
 				.addFields([
 					{

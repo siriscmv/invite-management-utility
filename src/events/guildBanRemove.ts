@@ -9,9 +9,10 @@ export default async function run(ban: GuildBan) {
 		.setTitle('User Unbanned')
 		.setTimestamp(Date.now())
 		.setAuthor({ name: ban.user.tag, iconURL: ban.user.displayAvatarURL() })
+		.setThumbnail(ban.user.displayAvatarURL())
 		.setFooter({ text: ban.user.id })
 		.addFields([
-			{ name: 'User', value: `\`${ban.user.tag}\` (${ban.user.id})`, inline: true },
+			{ name: 'User', value: `${ban.user}・\`${ban.user.tag}\``, inline: true },
 			{ name: 'Reason', value: ban.reason ?? 'None', inline: true }
 		]);
 

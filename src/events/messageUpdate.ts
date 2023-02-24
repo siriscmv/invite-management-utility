@@ -13,6 +13,7 @@ export default async function run(oldMessage: Message, newMessage: Message) {
 			name: newMessage.author?.tag ?? 'unknown',
 			iconURL: newMessage.author?.displayAvatarURL() ?? undefined
 		})
+		.setThumbnail(newMessage.author?.displayAvatarURL() ?? undefined)
 		.setFooter({ text: newMessage.id })
 		.addFields([
 			{

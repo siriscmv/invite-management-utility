@@ -9,6 +9,7 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 
 	const baseEmbed = new EmbedBuilder()
 		.setAuthor({ name: newMember.user.tag, iconURL: newMember.user.displayAvatarURL() })
+		.setThumbnail(newMember.user.displayAvatarURL())
 		.setFooter({ text: newMember.id });
 
 	const roles = {
@@ -17,12 +18,16 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 	};
 
 	const fields = [
-		roles.added.size > 0 || roles.removed.size > 0
+		roles.added.size > 0
 			? {
-					name: 'Roles',
-					value: `${roles.added.size ? '+ ' : ''}${roles.added.map((r) => r.toString()).join(' ')}\n${
-						roles.removed.size ? '- ' : ''
-					}${roles.removed.map((r) => r.toString()).join(' ')}`
+					name: 'Roles Added',
+					value: roles.added.map((r) => r.toString()).join(' ')
+			  }
+			: null,
+		roles.removed.size > 0
+			? {
+					name: 'Roles Removed',
+					value: roles.removed.map((r) => r.toString()).join(' ')
 			  }
 			: null,
 		oldMember.nickname !== newMember.nickname

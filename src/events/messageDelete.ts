@@ -9,6 +9,7 @@ export default async function run(message: Message) {
 		.setTitle('Message Deleted')
 		.setTimestamp(Date.now())
 		.setAuthor({ name: message.author?.tag ?? 'unknown', iconURL: message.author?.displayAvatarURL() ?? undefined })
+		.setThumbnail(message.author?.displayAvatarURL() ?? undefined)
 		.setFooter({ text: message.id })
 		.setDescription(
 			(message.content?.length > 1000 ? `${message.content.slice(0, 1000)} ...` : message.content) ??
