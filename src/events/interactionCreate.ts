@@ -115,7 +115,18 @@ const createTicket = async (interaction: ModalSubmitInteraction | ButtonInteract
 		.setThumbnail(ticket.user.displayAvatarURL())
 		.setTitle(`Ticket Opened - ${ticket.ticketNumber}`)
 		.setColor(config.green)
-		.setDescription(ticket.reason)
+		.setFields(
+			{
+				name: 'User',
+				value: ticket.user.toString(),
+				inline: true
+			},
+			{
+				name: 'Reason',
+				value: ticket.reason,
+				inline: true
+			}
+		)
 		.setTimestamp();
 
 	await (interaction.guild!.channels.cache.get(config.ticketLogsChannel)! as TextChannel).send({

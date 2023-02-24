@@ -9,6 +9,7 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 
 	const baseEmbed = new EmbedBuilder()
 		.setAuthor({ name: newMember.user.tag, iconURL: newMember.user.displayAvatarURL() })
+		.setDescription(newMember.toString())
 		.setThumbnail(newMember.user.displayAvatarURL())
 		.setFooter({ text: newMember.id });
 
@@ -75,21 +76,29 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 	if (oldMember.premiumSinceTimestamp && !newMember.premiumSinceTimestamp) {
 		await boostLog.send({
 			embeds: [
-				baseEmbed
+				new EmbedBuilder(baseEmbed.data)
 					.setColor(red)
 					.setTitle('Member Unboosted')
-					.setDescription(
-						`・${newMember}/\n・Started boosting <t:${Math.round(oldMember.premiumSinceTimestamp / 1000)}:R>`
-					)
+					.setFields([
+						{
+							name: 'Started Boosting',
+							value: `<t:${Math.round(oldMember.premiumSinceTimestamp / 1000)}:R>`
+						}
+					])
 			]
 		});
 	} else if (!oldMember.premiumSinceTimestamp && newMember.premiumSinceTimestamp) {
 		await boostLog.send({
 			embeds: [
-				baseEmbed
+				new EmbedBuilder(baseEmbed.data)
 					.setColor(green)
 					.setTitle('Member Boosted')
-					.setDescription(`・${newMember}\n・Started boosting <t:${Math.round(Date.now() / 1000)}:R>`)
+					.setFields([
+						{
+							name: 'Started Boosting',
+							value: `<t:${Math.round(Date.now() / 1000)}:R>`
+						}
+					])
 			]
 		});
 	}

@@ -32,7 +32,7 @@ export default async function run(oldMessage: Message, newMessage: Message) {
 			},
 			{
 				name: 'Author',
-				value: `\`${newMessage.author?.tag ?? 'unknown'}\` (${newMessage.author?.id ?? ''})`,
+				value: `${newMessage.author?.toString()}・\`${newMessage.author?.tag ?? 'unknown'}\``,
 				inline: true
 			}
 		]);

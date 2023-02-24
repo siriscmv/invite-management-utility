@@ -16,7 +16,7 @@ export default async function run(message: Message) {
 				'No content/uncached'
 		)
 		.addFields([
-			{ name: 'Author', value: `\`${message.author?.tag ?? 'unknown'}\` (${message.author?.id ?? ''})`, inline: true },
+			{ name: 'Author', value: `${message.author?.toString()}・\`${message.author?.tag ?? 'unknown'}\``, inline: true },
 			{ name: 'Attachments', value: message.attachments.size.toString(), inline: true }
 		]);
 

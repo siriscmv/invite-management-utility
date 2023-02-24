@@ -39,14 +39,35 @@ export default class Ticket {
 			.setAuthor({ name: this.user.tag, iconURL: this.user.displayAvatarURL() })
 			.setThumbnail(this.user.displayAvatarURL())
 			.setTitle(`Ticket ${this.ticketNumber} deleted`)
-			.setDescription(
-				`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${staff.user.tag}\`${
-					note ? `\n・${note}` : ''
-				}`
-			)
+			.setFields([
+				{
+					name: 'Created By',
+					value: this.user.toString(),
+					inline: true
+				},
+				{
+					name: 'Reason',
+					value: this.reason,
+					inline: true
+				},
+				{
+					name: 'Closed By',
+					value: staff.user.toString(),
+					inline: true
+				}
+			])
 			.setColor(red)
 			.setFooter({ text: this.user.id })
 			.setTimestamp();
+
+		if (note)
+			em.addFields([
+				{
+					name: 'Note',
+					value: note,
+					inline: true
+				}
+			]);
 
 		await (staff.guild.channels.cache.get(ticketLogsChannel)! as TextChannel).send({ embeds: [em] });
 
@@ -71,11 +92,28 @@ export default class Ticket {
 			.setThumbnail(this.user.displayAvatarURL())
 			.setFooter({ text: this.user.id })
 			.setTimestamp()
-			.setDescription(
-				`・Ticket made by ${this.user}\n・Reason: ${this.reason}\n・Closed by \`${
-					staff.user.tag
-				}\`\n・Total Messages: ${this.channel!.messages.cache.size}`
-			);
+			.setFields([
+				{
+					name: 'Created By',
+					value: this.user.toString(),
+					inline: true
+				},
+				{
+					name: 'Reason',
+					value: this.reason,
+					inline: true
+				},
+				{
+					name: 'Closed By',
+					value: staff.user.toString(),
+					inline: true
+				},
+				{
+					name: 'Total Messages',
+					value: this.channel!.messages.cache.size.toLocaleString(),
+					inline: true
+				}
+			]);
 
 		return await (staff.client.channels.cache.get(transcriptChannel) as TextChannel).send({
 			embeds: [em],
