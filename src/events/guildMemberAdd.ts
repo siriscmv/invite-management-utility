@@ -31,6 +31,13 @@ export default async function run(member: GuildMember) {
 						value: member.guild.memberCount.toLocaleString(),
 						inline: true
 					}
+					/*
+					{
+						name: 'Rejoin',
+						value: member.flags, //TODO: Fix this
+						inline: true
+					}
+					*/
 				])
 		]
 	});
