@@ -39,9 +39,9 @@
 		"@types/humanize-duration": "^3.27.1",
 		"@types/node": "^18.14.0",
 		"eslint": "^8.6.0",
-		"prettier": "2.8.4",
+		"prettier": "2.8.7",
 		"prisma": "^4.10.1",
 		"tslib": "^2.4.0",
-		"typescript": "^4.5.4"
+		"typescript": "^5.0.2"
 	}
 }

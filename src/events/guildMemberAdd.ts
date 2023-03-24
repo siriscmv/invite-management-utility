@@ -32,14 +32,12 @@ export default async function run(member: GuildMember) {
 						name: 'Member Count',
 						value: member.guild.memberCount.toLocaleString(),
 						inline: true
-					}
-					/*
+					},
 					{
 						name: 'Rejoin',
-						value: member.flags, //TODO: Fix this
+						value: member.flags.has('DidRejoin') ? 'Yes' : 'No',
 						inline: true
 					}
-					*/
 				])
 		]
 	});
