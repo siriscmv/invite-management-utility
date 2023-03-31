@@ -63,15 +63,17 @@ export default async function run(oldMember: GuildMember, newMember: GuildMember
 			: null
 	].filter((f) => f !== null) as { name: string; value: string }[];
 
-	await log.send({
-		embeds: [
-			new EmbedBuilder(baseEmbed.data)
-				.setColor(peach)
-				.setTitle('Member Updated')
-				.setTimestamp(Date.now())
-				.addFields(fields)
-		]
-	});
+	if (fields.length > 0) {
+		await log.send({
+			embeds: [
+				new EmbedBuilder(baseEmbed.data)
+					.setColor(peach)
+					.setTitle('Member Updated')
+					.setTimestamp(Date.now())
+					.addFields(fields)
+			]
+		});
+	}
 
 	if (oldMember.premiumSinceTimestamp && !newMember.premiumSinceTimestamp) {
 		await boostLog.send({
