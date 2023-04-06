@@ -22,6 +22,7 @@ export const transcriptChannel = '887297077456023593';
 export const ticketLogsChannel = '887297029938765844';
 export const ticketCategory = '874647974075060305';
 export const logChannel = '887297621251747860';
+export const aiSupportChannel = '1093564947922960434'
 
 export const red = '#f38ba8';
 export const green = '#a6e3a1';
