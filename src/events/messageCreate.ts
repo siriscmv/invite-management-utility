@@ -8,7 +8,16 @@ import {
 	MessageActionRowComponentBuilder
 } from 'discord.js';
 import { emotes } from '../utils/emotes.js';
-import { boostChannel, ticketChannel, mainServer, boostPerks, prefix, tagPrefix, mauve } from '../config.js';
+import {
+	boostChannel,
+	ticketChannel,
+	mainServer,
+	boostPerks,
+	prefix,
+	tagPrefix,
+	mauve,
+	aiSupportChannel
+} from '../config.js';
 import commands from './../utils/commands.js';
 import tags from './../utils/tags.js';
 
@@ -55,5 +64,24 @@ export default async function run(msg: Message): Promise<undefined> {
 		const comp = new ActionRowBuilder<MessageActionRowComponentBuilder>().setComponents([button]);
 
 		channel.send({ embeds: [embed], components: [comp] });
+	}
+
+	if (msg.channelId === aiSupportChannel) {
+		const result = await fetch(process.env.AI_ASK_URL!, {
+			method: 'POST',
+			headers: {
+				'Content-Type': 'application/json'
+			},
+			body: JSON.stringify({ query: msg.content })
+		});
+
+		if (!result.ok) {
+			await msg.react('⚠️');
+			return;
+		}
+
+		const data = await result.json();
+		if (data?.answer?.text) await msg.reply(data.answer.text);
+		else await msg.reply('😕');
 	}
 }
