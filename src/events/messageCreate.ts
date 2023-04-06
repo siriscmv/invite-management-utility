@@ -67,6 +67,8 @@ export default async function run(msg: Message): Promise<undefined> {
 	}
 
 	if (msg.channelId === aiSupportChannel) {
+		await msg.channel.sendTyping();
+
 		const result = await fetch(process.env.AI_ASK_URL!, {
 			method: 'POST',
 			headers: {
