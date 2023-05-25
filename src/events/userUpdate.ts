@@ -1,6 +1,6 @@
 import { User } from 'discord.js';
-import { decancer, dehoist } from './guildMemberAdd';
-import { mainServer } from 'src/config';
+import { decancer, dehoist } from './guildMemberAdd.js';
+import { mainServer } from 'src/config.js';
 
 export default async function run(oldUser: User, newUser: User) {
 	if (oldUser.username === newUser.username) return;
