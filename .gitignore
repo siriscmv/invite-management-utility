@@ -4,4 +4,3 @@ package-lock.json
 /prod/
 tsconfig.tsbuildinfo
 database.sqlite
-pnpm-lock.yaml

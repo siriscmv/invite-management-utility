@@ -47,7 +47,7 @@ export default async function run(member: GuildMember) {
 	if (normalized !== name) await member.setNickname(normalized);
 }
 
-const decancer = (name: string) => {
+export const decancer = (name: string) => {
 	if (/^[\x00-\xFF]*$/im.test(name)) return name;
 	const sanitized: string = unidecode(nfkc(latinize(removeAccents(name)))).replace(/\[\?\]/g, '') || 'gibberish';
 
@@ -55,7 +55,7 @@ const decancer = (name: string) => {
 	return 'Moderated nickname';
 };
 
-const dehoist = (name: string): string | null => {
+export const dehoist = (name: string): string | null => {
 	if (!(name[0] < '0')) return name;
 	else return strip(name);
 };
